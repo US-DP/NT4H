@@ -9,7 +9,7 @@ import org.springframework.samples.nt4h.exceptions.NotFoundException;
 import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.game.exceptions.*;
 import org.springframework.samples.nt4h.player.exceptions.RoleAlreadyChosenException;
-import org.springframework.samples.nt4h.turn.exceptions.*;
+import org.springframework.samples.nt4h.phase.exceptions.*;
 import org.springframework.samples.nt4h.user.User;
 import org.springframework.samples.nt4h.user.UserService;
 import org.springframework.web.bind.annotation.ControllerAdvice;

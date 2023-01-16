@@ -152,7 +152,7 @@ public class GameController {
     public String showCurrentGame(HttpSession session, HttpServletRequest request) {
         Game game = getGame();
         advise.keepUrl(session, request);
-        return game == null ? PAGE_GAMES : VIEW_GAME_LOBBY;
+        return game.isNew() ? PAGE_GAMES : VIEW_GAME_LOBBY;
     }
 
     // Visualizar una partida.
@@ -234,17 +234,15 @@ public class GameController {
     public String deletePlayer(@PathVariable("playerId") int playerId) {
         Game game = getGame();
         if(playerService.getPlayerById(playerId).getHost()) {
-            if(game.getCurrentPlayer()==null) {
+            if(game.getCurrentPlayer()==null)
                 gameService.deleteGameById(game.getId());
-            }
             playerService.deletePlayerById(playerId);
             userService.removeUserFromGame(userService.getLoggedUser());
             return PAGE_GAMES;
-        }else{
-            userService.removeUserFromGame(userService.getUserByUsername(playerService.getPlayerById(playerId).getName()));
-            playerService.deletePlayerById(playerId);
-            return PAGE_GAME_TO_LOBBY.replace("{gameId}", game.getId().toString());
         }
+        userService.removeUserFromGame(userService.getUserByUsername(playerService.getPlayerById(playerId).getName()));
+        playerService.deletePlayerById(playerId);
+        return PAGE_GAME_TO_LOBBY.replace("{gameId}", game.getId().toString());
     }
 
     @GetMapping("deleteGame/{gameId}")

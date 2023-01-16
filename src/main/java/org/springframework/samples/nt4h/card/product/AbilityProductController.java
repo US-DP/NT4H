@@ -2,9 +2,8 @@ package org.springframework.samples.nt4h.card.product;
 
 import org.springframework.samples.nt4h.capacity.Capacity;
 import org.springframework.samples.nt4h.capacity.StateCapacity;
-import org.springframework.samples.nt4h.card.ability.Deck;
-import org.springframework.samples.nt4h.card.ability.DeckService;
-import org.springframework.samples.nt4h.card.enemy.EnemyService;
+import org.springframework.samples.nt4h.card.ability.deck.Deck;
+import org.springframework.samples.nt4h.card.ability.deck.DeckService;
 import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.message.CacheManager;
 import org.springframework.samples.nt4h.message.Message;

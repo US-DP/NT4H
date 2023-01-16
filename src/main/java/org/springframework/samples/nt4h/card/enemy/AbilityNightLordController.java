@@ -1,8 +1,9 @@
 package org.springframework.samples.nt4h.card.enemy;
 
-import org.springframework.samples.nt4h.card.ability.AbilityInGame;
+import org.springframework.samples.nt4h.card.ability.inGame.AbilityInGame;
 import org.springframework.samples.nt4h.card.ability.AbilityService;
-import org.springframework.samples.nt4h.card.ability.DeckService;
+import org.springframework.samples.nt4h.card.ability.deck.DeckService;
+import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
 import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.message.CacheManager;
 import org.springframework.samples.nt4h.player.Player;

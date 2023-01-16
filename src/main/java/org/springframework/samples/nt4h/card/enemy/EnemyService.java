@@ -1,6 +1,8 @@
 package org.springframework.samples.nt4h.card.enemy;
 
 import lombok.AllArgsConstructor;
+import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
+import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGameRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -5,8 +5,8 @@ import com.github.cliftonlabs.json_simple.Jsonable;
 import com.google.common.collect.Lists;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.samples.nt4h.turn.Phase;
-import org.springframework.samples.nt4h.card.ability.Deck;
+import org.springframework.samples.nt4h.phase.Phase;
+import org.springframework.samples.nt4h.card.ability.deck.Deck;
 import org.springframework.samples.nt4h.card.hero.HeroInGame;
 import org.springframework.samples.nt4h.card.hero.Role;
 import org.springframework.samples.nt4h.game.Game;
@@ -47,8 +47,6 @@ public class Player extends NamedEntity implements Jsonable {
 
     private Integer wounds;
 
-    private Integer damageProtect;
-
     private Boolean alive;
 
     @DateTimeFormat(pattern = "yyyy/MM/dd")
@@ -88,7 +86,6 @@ public class Player extends NamedEntity implements Jsonable {
         ready = false;
         statistic = Statistic.createStatistic();
         wounds = 0;
-        damageProtect = 0;
         hasEvasion = true;
         turns = Lists.newArrayList();
         deck = Deck.createEmptyDeck();

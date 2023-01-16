@@ -1,15 +1,17 @@
 package org.springframework.samples.nt4h.card.ability;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.nt4h.card.enemy.EnemyInGame;
-import org.springframework.samples.nt4h.card.product.ProductInGame;
+import org.springframework.samples.nt4h.card.ability.deck.Deck;
+import org.springframework.samples.nt4h.card.ability.inGame.AbilityInGame;
+import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
+import org.springframework.samples.nt4h.card.product.inGame.ProductInGame;
 import org.springframework.samples.nt4h.card.product.ProductService;
 import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.game.GameService;
 import org.springframework.samples.nt4h.message.CacheManager;
 import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.player.PlayerService;
-import org.springframework.samples.nt4h.turn.Phase;
+import org.springframework.samples.nt4h.phase.Phase;
 import org.springframework.samples.nt4h.turn.Turn;
 import org.springframework.samples.nt4h.turn.TurnService;
 import org.springframework.samples.nt4h.user.User;

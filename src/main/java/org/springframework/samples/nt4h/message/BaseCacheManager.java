@@ -1,7 +1,7 @@
 package org.springframework.samples.nt4h.message;
 
 import com.google.common.collect.Lists;
-import org.springframework.samples.nt4h.card.enemy.EnemyInGame;
+import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;

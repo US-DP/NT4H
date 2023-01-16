@@ -2,6 +2,7 @@ package org.springframework.samples.nt4h.turn;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.nt4h.game.Game;
+import org.springframework.samples.nt4h.phase.Phase;
 import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.user.User;
 import org.springframework.samples.nt4h.user.UserService;

@@ -1,7 +1,7 @@
 package org.springframework.samples.nt4h.message;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.nt4h.card.enemy.EnemyInGame;
+import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
 import org.springframework.samples.nt4h.card.enemy.EnemyService;
 import org.springframework.samples.nt4h.game.Game;
 import org.springframework.stereotype.Component;
