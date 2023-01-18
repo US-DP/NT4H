@@ -7,32 +7,25 @@
 <%@ taglib prefix="nt4h" tagdir="/WEB-INF/tags" %>
 
 <nt4h:layout pageName="lobby">
-    <h2>Game Lobby</h2>
-    <div class="ready"></div>
-
-    <div>
-        <c:if test="${loggedPlayer.isNew()}">
-            <h1>You are watching the game!</h1>
-        </c:if>
-        <c:if test="${loggedPlayer.ready}">
-            <h1>You are ready!</h1>
-        </c:if>
-        <c:if test="${!loggedPlayer.ready && !loggedPlayer.isNew()}">
-            <a href="/games/heroSelect">Add hero!</a>
-        </c:if>
-    </div>
-
-    <div class="next"></div>
-    <hr>
-    <div class="row">
-        <h2>Chatea</h2>
-        <div class="chatGroup"></div>
-        <c:if test="${!loggedPlayer.isNew()}">
-            <form:form modelAttribute="chat" class="form-horizontal" action="/messages/game">
-                <nt4h:inputField label="Content" name="content"/>
-            </form:form>
-        </c:if>
-    </div>
-    <script src="/resources/js/chatGroup.js" type="module"></script>
-    <script src="/resources/js/playersInLobby.js" type="module"></script>
+    <jsp:attribute name="customScript">
+        <script src="/resources/js/playersInLobby.js" type="module"></script>
+    </jsp:attribute>
+    <jsp:body>
+        <h2>Game Lobby</h2>
+        <div class="ready"></div>
+        <div>
+            <c:if test="${loggedPlayer.isNew()}">
+                <h1>You are watching the game!</h1>
+            </c:if>
+            <c:if test="${loggedPlayer.ready}">
+                <h1>You are ready!</h1>
+            </c:if>
+            <c:if test="${!loggedPlayer.ready && !loggedPlayer.isNew()}">
+                <a href="/games/heroSelect">Add hero!</a>
+            </c:if>
+        </div>
+        <div class="next"></div>
+        <hr>
+        <nt4h:chatGroup loggedPlayer="${loggedPlayer}" chat="${chat}"/>
+    </jsp:body>
 </nt4h:layout>

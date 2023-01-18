@@ -8,12 +8,6 @@
 <%@ taglib prefix="nth4" uri="http://www.springframework.org/tags/form" %>
 
 <nt4h:layout pageName="Action decision">
-    <style>
-        .pointer {
-            display: flex;
-            justify-content: center;
-        }
-    </style>
     <h2>Action decision</h2>
     <h1>Turno del jugador ${currentPlayer}</h1>
     <ol>
@@ -22,19 +16,6 @@
     </c:forEach>
     </ol>
     <hr>
-    <div>
-        <h2>Chatea</h2>
-        <div class="chatGroup"></div>
-        <c:if test="${!loggedPlayer.isNew()}">
-            <form:form modelAttribute="chat" class="form-horizontal" action="/messages/game">
-                <nt4h:inputField label="Content" name="content"/>
-            </form:form>
-        </c:if>
-        <c:if test="${loggedPlayer.isNew()}">
-            <a href="/turns">Reload</a>
-        </c:if>
-    </div>
+    <nt4h:chatGroup loggedPlayer="${loggedPlayer}" chat="${chat}"/>
     <a href="/end/finish" class="btn btn-danger">Leave</a>
-    <script src="/resources/js/chatGroup.js" type="module"></script>
-    <script src="/resources/js/radioButtom.js" type="module"></script>
 </nt4h:layout>
