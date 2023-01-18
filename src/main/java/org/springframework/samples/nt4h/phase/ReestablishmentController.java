@@ -10,6 +10,8 @@ import org.springframework.samples.nt4h.message.Advise;
 import org.springframework.samples.nt4h.message.Message;
 import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.player.PlayerService;
+import org.springframework.samples.nt4h.player.exceptions.AllDeadException;
+import org.springframework.samples.nt4h.player.exceptions.PlayerIsDeadException;
 import org.springframework.samples.nt4h.statistic.Statistic;
 import org.springframework.samples.nt4h.phase.exceptions.NoCurrentPlayer;
 import org.springframework.samples.nt4h.phase.exceptions.TooManyAbilitiesException;
@@ -117,7 +119,7 @@ public class ReestablishmentController {
     }
 
     @GetMapping("/next")
-    public String reestablishmentNextTurn() throws TooManyAbilitiesException {
+    public String reestablishmentNextTurn() throws TooManyAbilitiesException, PlayerIsDeadException, AllDeadException {
         Game game = getGame();
         Player currentPlayer = getCurrentPlayer();
         Player loggedPlayer = getLoggedPlayer();

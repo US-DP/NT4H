@@ -1,0 +1,2 @@
+org\springframework\samples\nt4h\player\exceptions\AllDeadException.class
+org\springframework\samples\nt4h\player\exceptions\PlayerIsDeadException.class

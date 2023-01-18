@@ -11,6 +11,8 @@ import org.springframework.samples.nt4h.message.Advise;
 import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.player.PlayerService;
 import org.springframework.samples.nt4h.phase.exceptions.TooManyAbilitiesException;
+import org.springframework.samples.nt4h.player.exceptions.AllDeadException;
+import org.springframework.samples.nt4h.player.exceptions.PlayerIsDeadException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,13 +38,13 @@ public class DeckService {
 
     // De mazo a descarte.
     @Transactional(rollbackFor = Exception.class)
-    public void fromDeckToDiscard(Player player, Deck deck) {
+    public void fromDeckToDiscard(Player player, Deck deck) throws PlayerIsDeadException, AllDeadException {
         AbilityInGame inDeck = deck.getInDeck().get(0);
         specificCardFromDeckToDiscard(player, deck, inDeck);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void specificCardFromDeckToDiscard(Player player, Deck deck, AbilityInGame inDeck) {
+    public void specificCardFromDeckToDiscard(Player player, Deck deck, AbilityInGame inDeck) throws PlayerIsDeadException, AllDeadException {
         abilityService.saveAbilityInGame(inDeck);
         deck.getInDeck().remove(inDeck);
         deck.getInDiscard().add(inDeck);
@@ -53,7 +55,7 @@ public class DeckService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void fromDeckToDiscard(Player player, Deck deck, Integer times) {
+    public void fromDeckToDiscard(Player player, Deck deck, Integer times) throws PlayerIsDeadException, AllDeadException {
         for (int i = 0; i < times; i++) {
             fromDeckToDiscard(player, deck);
         }
@@ -80,13 +82,13 @@ public class DeckService {
 
     // De mazo a mano
     @Transactional(rollbackFor = Exception.class)
-    public void fromDeckToHand(Player player, Deck deck) {
+    public void fromDeckToHand(Player player, Deck deck) throws PlayerIsDeadException, AllDeadException {
         AbilityInGame inDeck = deck.getInDeck().get(0);
         specificCardFromDeckToHand(player, deck, inDeck);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void specificCardFromDeckToHand(Player player, Deck deck, AbilityInGame inDeck) {
+    public void specificCardFromDeckToHand(Player player, Deck deck, AbilityInGame inDeck) throws PlayerIsDeadException, AllDeadException {
         abilityService.saveAbilityInGame(inDeck);
         deck.getInDeck().remove(inDeck);
         deck.getInHand().add(inDeck);
@@ -133,7 +135,7 @@ public class DeckService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void moveAllCardsFromDiscardToDeck(Player player, Deck deck) {
+    public void moveAllCardsFromDiscardToDeck(Player player, Deck deck) throws PlayerIsDeadException, AllDeadException {
         List<AbilityInGame> tmp = new ArrayList<>(deck.getInDiscard());
         Collections.shuffle(tmp);
         deck.getInDiscard().clear();
@@ -155,14 +157,14 @@ public class DeckService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void fromDeckToHand(Player player, Deck deck, Integer times) {
+    public void fromDeckToHand(Player player, Deck deck, Integer times) throws PlayerIsDeadException, AllDeadException {
         for (int i = 0; i < times; i++) {
             fromDeckToHand(player, deck);
         }
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void moveCardsFromDeckToHand(Player player, Deck deck) throws TooManyAbilitiesException {
+    public void moveCardsFromDeckToHand(Player player, Deck deck) throws TooManyAbilitiesException, PlayerIsDeadException, AllDeadException {
         if (deck.getInHand().size() > SIZE_HAND)
             throw new TooManyAbilitiesException();
         Integer cardsToMove = SIZE_HAND - deck.getInHand().size();

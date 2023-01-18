@@ -7,9 +7,14 @@ import org.springframework.samples.nt4h.card.hero.exceptions.MaxUsesExcededExcep
 import org.springframework.samples.nt4h.card.product.exceptions.NotInSaleException;
 import org.springframework.samples.nt4h.exceptions.NotFoundException;
 import org.springframework.samples.nt4h.game.Game;
+import org.springframework.samples.nt4h.game.GameService;
 import org.springframework.samples.nt4h.game.exceptions.*;
+import org.springframework.samples.nt4h.phase.Phase;
+import org.springframework.samples.nt4h.player.Player;
+import org.springframework.samples.nt4h.player.exceptions.PlayerIsDeadException;
 import org.springframework.samples.nt4h.player.exceptions.RoleAlreadyChosenException;
 import org.springframework.samples.nt4h.phase.exceptions.*;
+import org.springframework.samples.nt4h.turn.TurnService;
 import org.springframework.samples.nt4h.user.User;
 import org.springframework.samples.nt4h.user.UserService;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -17,6 +22,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 /**
  * This advice is necessary because MockMvc is not a real servlet environment, therefore it does not redirect error
@@ -30,6 +36,8 @@ public class ExceptionHandlerConfiguration
     // add any exceptions/validations/binding problems
 
     private final UserService userService;
+    private final GameService gameService;
+    private final TurnService turnService;
     private static final String PAGE_GAMES = "redirect:/games";
     private static final String PAGE_GAME_LOBBY = "redirect:/games/current";
     private static final String PAGE_GAME_HERO_SELECT = "redirect:/games/heroSelect";
@@ -40,14 +48,12 @@ public class ExceptionHandlerConfiguration
 
     private final static String PAGE_START = "redirect:/start";
 
-    public ExceptionHandlerConfiguration(UserService userService) {
-        this.userService = userService;
-    }
-
     @Autowired
-    public ExceptionHandlerConfiguration(BasicErrorController errorController, UserService userService) {
+    public ExceptionHandlerConfiguration(BasicErrorController errorController, UserService userService, GameService gameService, TurnService turnService) {
         this.errorController = errorController;
         this.userService = userService;
+        this.gameService = gameService;
+        this.turnService = turnService;
     }
 
     @ExceptionHandler(NotFoundException.class)
@@ -195,5 +201,18 @@ public class ExceptionHandlerConfiguration
         session.setAttribute("message", "You must select a hero.");
         session.setAttribute("messageType", "danger");
         return PAGE_GAME_HERO_SELECT;
+    }
+
+    @ExceptionHandler(PlayerIsDeadException.class)
+    public String handlePlayerIsDeadException(HttpSession session) {
+        session.setAttribute("message", "You are dead.");
+        session.setAttribute("messageType", "danger");
+        User loggedUser = userService.getLoggedUser();
+        Game game = loggedUser.getGame();
+        Optional<Player> nextPlayer = game.getNextPlayer();
+        game.setCurrentPlayer(nextPlayer.get());
+        game.setCurrentTurn(turnService.getTurnsByPhaseAndPlayerId(Phase.START, nextPlayer.get().getId()));
+        gameService.saveGame(game);
+        return PAGE_GAME_LOBBY;
     }
 }

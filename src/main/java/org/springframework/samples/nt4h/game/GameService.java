@@ -18,6 +18,8 @@ import org.springframework.samples.nt4h.game.exceptions.*;
 import org.springframework.samples.nt4h.message.Advise;
 import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.player.PlayerService;
+import org.springframework.samples.nt4h.player.exceptions.AllDeadException;
+import org.springframework.samples.nt4h.player.exceptions.PlayerIsDeadException;
 import org.springframework.samples.nt4h.player.exceptions.RoleAlreadyChosenException;
 import org.springframework.samples.nt4h.statistic.StatisticService;
 import org.springframework.samples.nt4h.phase.Phase;
@@ -229,7 +231,7 @@ public class GameService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public Integer attackEnemyToActualPlayer(Game game, Predicate<EnemyInGame> hasPreventedDamage, int defendedDmg, List<EnemyInGame> enemiesInATrap) {
+    public Integer attackEnemyToActualPlayer(Game game, Predicate<EnemyInGame> hasPreventedDamage, int defendedDmg, List<EnemyInGame> enemiesInATrap) throws PlayerIsDeadException, AllDeadException {
         Player currentPlayer = game.getCurrentPlayer();
         if (game.getActualOrcs().isEmpty()) return 0;
         int damage = game.getActualOrcs().stream()

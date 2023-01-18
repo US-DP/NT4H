@@ -7,6 +7,8 @@ import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
 import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.message.CacheManager;
 import org.springframework.samples.nt4h.player.Player;
+import org.springframework.samples.nt4h.player.exceptions.AllDeadException;
+import org.springframework.samples.nt4h.player.exceptions.PlayerIsDeadException;
 import org.springframework.samples.nt4h.statistic.Statistic;
 import org.springframework.samples.nt4h.statistic.StatisticService;
 import org.springframework.samples.nt4h.user.User;
@@ -73,7 +75,7 @@ public class AbilityThiefController {
 
     // Al corazón. (fufa)
     @GetMapping("/toTheHeart")
-    private String toTheHeart(HttpSession session) {
+    private String toTheHeart(HttpSession session) throws PlayerIsDeadException, AllDeadException {
         Player currentPlayer = getCurrentPlayer();
         // Comprobamos si podemos cargarnos al enemigo.
         EnemyInGame attackedEnemy = cacheManager.getAttackedEnemy(session);

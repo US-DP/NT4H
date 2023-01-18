@@ -12,7 +12,7 @@
     <h2>Buy a product</h2>
     <nt4h:playerInfo currentPlayer="${currentPlayer}"/>
     <c:if test="${!loggedPlayer.isNew()}">
-        <nt4h:productPlayer productsOnSale="${productsOnsale}"/>
+        <nt4h:productPlayer productsOnSale="${productsOnsale}" newTurn="${newTurn}"/>
     </c:if>
     <c:if test="${loggedPlayer.isNew()}">
         <nt4h:productSpectator productsOnSale="${productsOnSale}"/>

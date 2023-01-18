@@ -6,6 +6,8 @@ import org.springframework.samples.nt4h.card.ability.deck.DeckService;
 import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.message.CacheManager;
 import org.springframework.samples.nt4h.player.Player;
+import org.springframework.samples.nt4h.player.exceptions.AllDeadException;
+import org.springframework.samples.nt4h.player.exceptions.PlayerIsDeadException;
 import org.springframework.samples.nt4h.statistic.StatisticService;
 import org.springframework.samples.nt4h.user.User;
 import org.springframework.samples.nt4h.user.UserService;
@@ -66,7 +68,7 @@ public class AbilityKnightController {
 
     // Ataque brutal
     @GetMapping("/brutalAttack")
-    private String brutalAttack() {
+    private String brutalAttack() throws PlayerIsDeadException, AllDeadException {
         Player currentPlayer = getCurrentPlayer();
         // Pierde una carta.
         deckService.fromDeckToDiscard(currentPlayer, currentPlayer.getDeck());
@@ -83,7 +85,7 @@ public class AbilityKnightController {
 
     // Doble espadazo.
     @GetMapping("/doubleSlash")
-    private String doubleSlash() {
+    private String doubleSlash() throws PlayerIsDeadException, AllDeadException {
         Player currentPlayer = getCurrentPlayer();
         // Elimina una carta de la mano.
         deckService.fromDeckToDiscard(currentPlayer, currentPlayer.getDeck());
@@ -104,7 +106,7 @@ public class AbilityKnightController {
 
     // Espadazo.
     @GetMapping("/slash")
-    private String slash(HttpSession session) {
+    private String slash(HttpSession session) throws PlayerIsDeadException, AllDeadException {
         Player currentPlayer = getCurrentPlayer();
         // Comprueba si es el primer slash.
         if (Boolean.TRUE.equals(cacheManager.isFirstSlash(session))) {
@@ -117,7 +119,7 @@ public class AbilityKnightController {
 
     // Paso atrás.
     @GetMapping("/stepBack")
-    private String stepBack() {
+    private String stepBack() throws PlayerIsDeadException, AllDeadException {
         Player currentPlayer = getCurrentPlayer();
         // Roba dos cartas.
         deckService.fromDeckToHand(currentPlayer, currentPlayer.getDeck(), 2);
@@ -126,7 +128,7 @@ public class AbilityKnightController {
 
     // Todoo o nada.
     @GetMapping("/allOrNothing")
-    private String allOrNothing(HttpSession session) {
+    private String allOrNothing(HttpSession session) throws PlayerIsDeadException, AllDeadException {
         Player currentPlayer = getCurrentPlayer();
         // Roba una carta.
         Deck deck = currentPlayer.getDeck();
@@ -139,7 +141,7 @@ public class AbilityKnightController {
 
     // Voz de aliento
     @GetMapping("/voiceOfEncouragement")
-    private String voiceOfEncouragement() {
+    private String voiceOfEncouragement() throws PlayerIsDeadException, AllDeadException {
         Player currentPlayer = getCurrentPlayer();
         // cada jugador roba dos cartas.
         for (Player player : getGame().getPlayers()) {

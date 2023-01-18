@@ -8,6 +8,8 @@ import org.springframework.samples.nt4h.message.Advise;
 import org.springframework.samples.nt4h.message.CacheManager;
 import org.springframework.samples.nt4h.message.Message;
 import org.springframework.samples.nt4h.player.Player;
+import org.springframework.samples.nt4h.player.exceptions.AllDeadException;
+import org.springframework.samples.nt4h.player.exceptions.PlayerIsDeadException;
 import org.springframework.samples.nt4h.statistic.Statistic;
 import org.springframework.samples.nt4h.turn.Turn;
 import org.springframework.samples.nt4h.turn.TurnService;
@@ -83,7 +85,7 @@ public class EnemyAttackController {
     }
 
     @GetMapping
-    public String getEnemyAttack(ModelMap model, HttpSession session, HttpServletRequest request) {
+    public String getEnemyAttack(ModelMap model, HttpSession session, HttpServletRequest request) throws PlayerIsDeadException, AllDeadException {
         Game game = getGame();
         if (getCurrentPlayer() == getLoggedPlayer() && damage == null) {
             int defendedDmg = cacheManager.getDefend(session);

@@ -2,11 +2,18 @@ package org.springframework.samples.nt4h.player;
 
 import lombok.AllArgsConstructor;
 import org.springframework.samples.nt4h.exceptions.NotFoundException;
+import org.springframework.samples.nt4h.game.Game;
+import org.springframework.samples.nt4h.game.GameService;
 import org.springframework.samples.nt4h.message.Advise;
+import org.springframework.samples.nt4h.phase.Phase;
+import org.springframework.samples.nt4h.player.exceptions.AllDeadException;
+import org.springframework.samples.nt4h.player.exceptions.PlayerIsDeadException;
 import org.springframework.samples.nt4h.turn.TurnService;
 import org.springframework.samples.nt4h.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -62,12 +69,22 @@ public class PlayerService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void inflictWounds(Player player, int i) {
+    public void inflictWounds(Player player, int i) throws PlayerIsDeadException, AllDeadException {
         player.setWounds(player.getWounds() + i);
         advise.getOneWound();
         if (player.getHealth() <= 0) {
             advise.playerIsDead();
             player.setAlive(false);
+            savePlayer(player);
+            savePlayer(player);
+            Game game = player.getGame();
+            Optional<Player> nextPlayer = game.getNextPlayer();
+            if (nextPlayer.isPresent()) {
+                throw new PlayerIsDeadException();
+            } else {
+                throw new AllDeadException();
+            }
+
         }
 
         savePlayer(player);

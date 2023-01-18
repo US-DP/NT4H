@@ -6,6 +6,8 @@ import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.message.CacheManager;
 import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.player.PlayerService;
+import org.springframework.samples.nt4h.player.exceptions.AllDeadException;
+import org.springframework.samples.nt4h.player.exceptions.PlayerIsDeadException;
 import org.springframework.samples.nt4h.statistic.StatisticService;
 import org.springframework.samples.nt4h.user.User;
 import org.springframework.samples.nt4h.user.UserService;
@@ -71,7 +73,7 @@ public class AbilityWizardController {
 
     // Aura protectora
     @GetMapping("/protectiveAura")
-    private String protectiveAura(HttpSession session) {
+    private String protectiveAura(HttpSession session) throws PlayerIsDeadException, AllDeadException {
         Player currentPlayer = getCurrentPlayer();
         // Anula el daño.
         cacheManager.addAllInBattlePreventDamageFromEnemies(session, getGame());
@@ -86,7 +88,7 @@ public class AbilityWizardController {
 
     // Bola de fuego
     @GetMapping("/fireball")
-    private String fireball(HttpSession session) {
+    private String fireball(HttpSession session) throws PlayerIsDeadException, AllDeadException {
         Player currentPlayer = getCurrentPlayer();
         Game game = getGame();
         // Atacamos a todos los enemigos
@@ -103,7 +105,7 @@ public class AbilityWizardController {
 
     // Disparo gélido
     @GetMapping("/frostShot")
-    private String frostShot(HttpSession session) {
+    private String frostShot(HttpSession session) throws PlayerIsDeadException, AllDeadException {
         Player currentPlayer = getCurrentPlayer();
         // Roba una carta.
         deckService.fromDeckToHand(currentPlayer, currentPlayer.getDeck());
@@ -114,7 +116,7 @@ public class AbilityWizardController {
 
     // Flecha corrosiva
     @GetMapping("/corrosiveArrow")
-    private String corrosiveArrow(HttpSession session) {
+    private String corrosiveArrow(HttpSession session) throws PlayerIsDeadException, AllDeadException {
         Player currentPlayer = getCurrentPlayer();
         // Pierde una carta.
         deckService.fromDeckToDiscard(currentPlayer, currentPlayer.getDeck());
@@ -160,7 +162,7 @@ public class AbilityWizardController {
 
     // Reconstitución.
     @GetMapping("/reconstitution")
-    private String reconstitution() {
+    private String reconstitution() throws PlayerIsDeadException, AllDeadException {
         Player currentPlayer = getCurrentPlayer();
         Deck deck = currentPlayer.getDeck();
         // Roba 1 carta.

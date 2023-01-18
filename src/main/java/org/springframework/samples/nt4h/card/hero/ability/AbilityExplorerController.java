@@ -10,6 +10,8 @@ import org.springframework.samples.nt4h.message.CacheManager;
 import org.springframework.samples.nt4h.message.Message;
 import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.player.PlayerService;
+import org.springframework.samples.nt4h.player.exceptions.AllDeadException;
+import org.springframework.samples.nt4h.player.exceptions.PlayerIsDeadException;
 import org.springframework.samples.nt4h.statistic.StatisticService;
 import org.springframework.samples.nt4h.turn.Turn;
 import org.springframework.samples.nt4h.user.User;
@@ -89,7 +91,7 @@ public class AbilityExplorerController {
 
     // Disparo certero.
     @GetMapping("/preciseShot")
-    private String preciseShot(HttpSession session) {
+    private String preciseShot(HttpSession session) throws PlayerIsDeadException, AllDeadException {
         Player currentPlayer = getCurrentPlayer();
         // Pierde una carta.
         deckService.fromDeckToDiscard(currentPlayer, currentPlayer.getDeck());
@@ -100,7 +102,7 @@ public class AbilityExplorerController {
 
     // Disparo rápido.
     @GetMapping("/rapidFire")
-    private String rapidFire(HttpSession session) {
+    private String rapidFire(HttpSession session) throws PlayerIsDeadException, AllDeadException {
         Player currentPlayer = getCurrentPlayer();
         // Tomo una primera carta.
         Deck deck = currentPlayer.getDeck();
@@ -124,7 +126,7 @@ public class AbilityExplorerController {
 
     // En la diana.
     @GetMapping("/target")
-    private String target() {
+    private String target() throws PlayerIsDeadException, AllDeadException {
         Player currentPlayer = getCurrentPlayer();
         // Gana una ficha de gloria.
         statisticService.gainGlory(currentPlayer, 1);
