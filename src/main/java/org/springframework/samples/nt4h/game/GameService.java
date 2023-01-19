@@ -10,7 +10,6 @@ import org.springframework.samples.nt4h.card.ability.deck.DeckService;
 import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
 import org.springframework.samples.nt4h.card.enemy.EnemyService;
 import org.springframework.samples.nt4h.card.hero.Hero;
-import org.springframework.samples.nt4h.card.hero.HeroInGame;
 import org.springframework.samples.nt4h.card.hero.HeroService;
 import org.springframework.samples.nt4h.card.product.ProductService;
 import org.springframework.samples.nt4h.exceptions.NotFoundException;
@@ -112,17 +111,15 @@ public class GameService {
 
 
     @Transactional(rollbackFor = {PlayerIsReadyException.class, RoleAlreadyChosenException.class, HeroAlreadyChosenException.class})
-    public void addHeroToPlayer(Player player, HeroInGame heroInGame, Game game) throws RoleAlreadyChosenException, HeroAlreadyChosenException, PlayerIsReadyException {
+    public void addHeroToPlayer(Player player, Hero hero, Game game) throws RoleAlreadyChosenException, HeroAlreadyChosenException, PlayerIsReadyException {
         if (Boolean.TRUE.equals(player.getReady()))
             throw new PlayerIsReadyException();
-        Hero hero = heroService.getHeroById(heroInGame.getHero().getId());
-        HeroInGame updatedHeroInGame = HeroInGame.createHeroInGame(hero, player);
-        game.addPlayerWithNewHero(player, updatedHeroInGame);
+        game.addPlayerWithNewHero(player, hero);
         player.setReady(player.getHeroes().size() == game.getMode().getNumHeroes());
         deckService.addDeckFromRole(player, game.getMode());
         playerService.createTurns(player);
         saveGame(game);
-        advise.chosenHero(heroInGame);
+        advise.chosenHero(hero);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -175,9 +172,7 @@ public class GameService {
             numEnemies = 1;
         else if (actualEnemies.size() == 0)
             numEnemies = ORCS_IN_BATTLE;
-        int addNighLord = actualEnemies.size() <= numEnemies ? 0 : 1;
-        System.out.println("addNighLord: " + addNighLord);
-        System.out.println("numEnemies: " + numEnemies);
+        int addNighLord = game.getAllOrcsInGame().size() <= numEnemies ? 0 : 1;
         List<EnemyInGame> newEnemies = new ArrayList<>(allOrcsInGame.stream().skip(addNighLord).limit(numEnemies).collect(Collectors.toList()));
         allOrcsInGame.removeAll(newEnemies);
         actualEnemies.addAll(newEnemies);

@@ -6,7 +6,7 @@ sendPetitionInInterval('/api/games', function (responseText) {
     const nexts = document.getElementsByClassName("next");
     const lis = resultado.game.players.map(function (player) {
         const namePlayer = player.name;
-        const nameHeroes = player.heroesInGame.sort().map(h => h.hero.name).join(", ")
+        const nameHeroes = player.heroesInGame.sort().map(h => h.name).join(", ")
         const ready = player.ready ? "Ready" : "Not ready";
         const actions = resultado.loggedUser.player != null && resultado.loggedUser.player.host ? " - " + "<a href='/games/deletePlayer/" + player.id + "'>Get Out!!</a>" : "";
         return createHtml(namePlayer, nameHeroes,ready,actions);

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.nt4h.achievement.Achievement;
 import org.springframework.samples.nt4h.card.ability.inGame.AbilityInGame;
 import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
-import org.springframework.samples.nt4h.card.hero.HeroInGame;
+import org.springframework.samples.nt4h.card.hero.Hero;
 import org.springframework.samples.nt4h.card.product.inGame.ProductInGame;
 import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.player.Player;
@@ -68,8 +68,8 @@ public class Advise {
         messageService.createNotification(getGame(), getUser().getUsername() + " is choosing a hero.");
     }
 
-    public void chosenHero(HeroInGame heroInGame) {
-        messageService.createNotification(getGame(), getLoggedPlayer().getName() + " has choosen " + heroInGame.getHero().getName() + ".");
+    public void chosenHero(Hero hero) {
+        messageService.createNotification(getGame(), getLoggedPlayer().getName() + " has choosen " + hero.getName() + ".");
     }
 
     public void getOutPlayer() {

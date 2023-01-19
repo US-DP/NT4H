@@ -76,15 +76,12 @@ public class PlayerService {
             advise.playerIsDead();
             player.setAlive(false);
             savePlayer(player);
-            savePlayer(player);
             Game game = player.getGame();
             Optional<Player> nextPlayer = game.getNextPlayer();
-            if (nextPlayer.isPresent()) {
+            if (nextPlayer.isPresent())
                 throw new PlayerIsDeadException();
-            } else {
+            else
                 throw new AllDeadException();
-            }
-
         }
 
         savePlayer(player);

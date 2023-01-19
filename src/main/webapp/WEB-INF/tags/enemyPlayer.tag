@@ -7,21 +7,15 @@
         <div class="pointer">
             <c:forEach var="i" begin="0" end="${orcs.size()-1}">
                 <c:set var="orc" value="${orcs[i]}" scope="page"/>
-                <div class="row">
-                    <div class="col-8">
-                        <p style="font-size:2rem">
-                            <c:if test="${!orc.isNightLord()}">
-                                <img src="/resources/images/heart_orc.gif" width="50"
-                                     height="50"> ${orc.actualHealth}
-                            </c:if>
-                            <c:if test="${orc.isNightLord()}">
-                                <img src="/resources/images/heart_nightlord.gif" width="50"
-                                     height="50"> ${orc.actualHealth}
-                            </c:if>
-                        </p>
-                    </div>
-                </div>
-                <div class="col-sm-2">
+                <div class="col-sm-2" style="margin-top: 40px">
+                    <c:if test="${!orc.isNightLord()}">
+                        <img src="/resources/images/heart_orc.gif" width="50"
+                             height="50"> ${orc.actualHealth}
+                    </c:if>
+                    <c:if test="${orc.isNightLord()}">
+                        <img src="/resources/images/heart_nightlord.gif" width="50"
+                             height="50"> ${orc.actualHealth}
+                    </c:if>
                     <nt4h:radioButtom name="currentEnemy" element="${orc.id}"
                                       frontImage="${orc.enemy.frontImage}" i="${i}0"
                                       image="/resources/images/muszka.png"/>

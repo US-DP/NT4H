@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="nt4h" tagdir="/WEB-INF/tags" %>
 <%@ attribute name="abilities" required="true" rtexprvalue="true" type="java.util.List"%>
-
+<%@ attribute name="j" required="true" rtexprvalue="true" %>
 
 <div class="container">
     <c:if test="${abilities.size() != 0}">
@@ -11,7 +11,7 @@
 
                 <div class="col-sm-2">
                     <nt4h:radioButtom name="currentAbility" element="${abilityInGame.id}"
-                                      frontImage="${abilityInGame.ability.frontImage}" i="${i}1"
+                                      frontImage="${abilityInGame.ability.frontImage}" i="${i}${j}"
                                       image="/resources/images/muszka.png"/>
                 </div>
             </c:forEach>

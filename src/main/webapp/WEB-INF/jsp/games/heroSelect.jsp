@@ -34,7 +34,6 @@
     }
 </style>
 <nt4h:layout pageName="hero selection">
-
     <h2>Hero Selection</h2>
     <form:form modelAttribute="newHero" class="form-horizontal" id="choose-hero-form">
         <div class="container">
@@ -43,7 +42,7 @@
                     <c:forEach var="i" begin="0" end="${heroes.size()-1}">
                         <c:set var="hero" value="${heroes[i]}" scope="page"/>
                         <div class="col-sm-2">
-                            <nt4h:radioButtom name="hero" element="${hero}" frontImage="${hero.frontImage}" i="${i}0"
+                            <nt4h:radioButtom name="name" element="${hero.name}" frontImage="${hero.frontImage}" i="${i}0"
                                               image="/resources/images/muszka.png"/>
                         </div>
                     </c:forEach>

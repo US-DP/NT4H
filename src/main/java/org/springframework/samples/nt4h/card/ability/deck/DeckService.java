@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.samples.nt4h.card.ability.Ability;
 import org.springframework.samples.nt4h.card.ability.inGame.AbilityInGame;
 import org.springframework.samples.nt4h.card.ability.AbilityService;
+import org.springframework.samples.nt4h.card.hero.Hero;
 import org.springframework.samples.nt4h.card.hero.Role;
 import org.springframework.samples.nt4h.game.Mode;
 import org.springframework.samples.nt4h.message.Advise;
@@ -198,7 +199,7 @@ public class DeckService {
 
     @Transactional(rollbackFor = Exception.class)
     public void addDeckFromRole(Player player, Mode mode) {
-        Role[] roles = player.getHeroes().stream().map(h -> h.getHero().getRole()).distinct().toArray(Role[]::new);
+        Role[] roles = player.getHeroes().stream().map(Hero::getRole).distinct().toArray(Role[]::new);
         if (roles.length == 1 && mode == Mode.UNI_CLASS)
             createDeck(player, abilityService.getAbilitiesByRole(roles[0]), null);
         else if (roles.length == 2 && mode == Mode.MULTI_CLASS) {

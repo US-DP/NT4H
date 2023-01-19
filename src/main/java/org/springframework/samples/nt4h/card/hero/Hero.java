@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.samples.nt4h.capacity.Capacity;
 import org.springframework.samples.nt4h.card.Card;
 import org.springframework.samples.nt4h.card.ability.Ability;
+import org.springframework.samples.nt4h.player.Player;
 
 import javax.persistence.*;
 import java.io.IOException;

@@ -15,7 +15,7 @@
     <c:if test="${!loggedPlayer.isNew()}">
         <form:form modelAttribute="newTurn" class="form-horizontal" id="choose-phases-form">
             <c:out value="In hand: ${currentPlayer.deck.inHand.size()} - In deck: ${currentPlayer.deck.inDeck.size()} - In Discard: ${currentPlayer.deck.inDiscard.size()}"/>
-            <nt4h:abilityPlayer abilities="${currentPlayer.deck.inHand}"/>
+            <nt4h:abilityPlayer abilities="${currentPlayer.deck.inHand}" j="0"/>
             <c:if test="${currentPlayer.deck.inHand.size() > 0}">
                 <button class="btn btn-default" type="submit">Discard Ability</button>
             </c:if>

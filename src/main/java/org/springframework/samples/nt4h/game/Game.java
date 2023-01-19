@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import lombok.*;
 import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
 import org.springframework.samples.nt4h.card.hero.Hero;
-import org.springframework.samples.nt4h.card.hero.HeroInGame;
 import org.springframework.samples.nt4h.game.exceptions.FullGameException;
 import org.springframework.samples.nt4h.game.exceptions.HeroAlreadyChosenException;
 import org.springframework.samples.nt4h.model.NamedEntity;
@@ -88,8 +87,8 @@ public class Game extends NamedEntity implements Jsonable {
         this.players.add(player);
     }
 
-    public void addPlayerWithNewHero(Player player, HeroInGame hero) throws HeroAlreadyChosenException, RoleAlreadyChosenException {
-        if (isHeroAlreadyChosen(hero.getHero()))
+    public void addPlayerWithNewHero(Player player, Hero hero) throws HeroAlreadyChosenException, RoleAlreadyChosenException {
+        if (isHeroAlreadyChosen(hero))
             throw new HeroAlreadyChosenException();
         player.addHero(hero);
     }
@@ -97,7 +96,7 @@ public class Game extends NamedEntity implements Jsonable {
     public boolean isHeroAlreadyChosen(Hero hero) {
         return this.players != null && this.players.stream()
             .flatMap(player -> player.getHeroes().stream())
-            .anyMatch(h -> h.getHero() == hero);
+            .anyMatch(h -> h == hero);
     }
 
     public static Game createGame(String name, Mode mode, int maxPlayers, String password) {

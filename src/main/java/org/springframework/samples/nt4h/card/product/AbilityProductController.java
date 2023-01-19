@@ -78,7 +78,7 @@ public class AbilityProductController {
     private String elfDagger(HttpSession session) {
         Player currentPlayer = getCurrentPlayer();
         // Pierde la carta si no tiene el héreo pericia.
-        List<StateCapacity > stateCapacities = currentPlayer.getHeroes().stream().flatMap(hero -> hero.getHero()
+        List<StateCapacity > stateCapacities = currentPlayer.getHeroes().stream().flatMap(hero -> hero
             .getCapacities().stream().map(Capacity::getStateCapacity)).collect(Collectors.toList());
         if (!stateCapacities.contains(StateCapacity.EXPERTISE))
             cacheManager.setHasToBeDeletedAbility(session);

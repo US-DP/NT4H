@@ -20,7 +20,7 @@
                 <nt4h:enemyPlayer orcs="${game.actualOrcs}"/>
                 <div class="container">
                     <c:out value="In hand: ${currentPlayer.deck.inHand.size()} - In deck: ${currentPlayer.deck.inDeck.size()} - In Discard: ${currentPlayer.deck.inDiscard.size()}"/>
-                    <nt4h:abilityPlayer abilities="${currentPlayer.deck.inHand}"/>
+                    <nt4h:abilityPlayer abilities="${currentPlayer.deck.inHand}" j="1"/>
                 </div>
                 <c:if test="${game.actualOrcs.size()!=0 && currentPlayer.deck.inHand.size()!=0 && game.currentTurn.phase.toString()!='enemyAttack'}">
                     <button class="btn btn-default" type="submit">Attack</button>

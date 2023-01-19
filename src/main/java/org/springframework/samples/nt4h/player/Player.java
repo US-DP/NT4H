@@ -5,9 +5,9 @@ import com.github.cliftonlabs.json_simple.Jsonable;
 import com.google.common.collect.Lists;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.samples.nt4h.card.hero.Hero;
 import org.springframework.samples.nt4h.phase.Phase;
 import org.springframework.samples.nt4h.card.ability.deck.Deck;
-import org.springframework.samples.nt4h.card.hero.HeroInGame;
 import org.springframework.samples.nt4h.card.hero.Role;
 import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.game.exceptions.FullGameException;
@@ -52,8 +52,8 @@ public class Player extends NamedEntity implements Jsonable {
     @DateTimeFormat(pattern = "yyyy/MM/dd")
     private LocalDate birthDate;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "player")
-    private List<HeroInGame> heroes;
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Hero> heroes;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Turn> turns;
@@ -99,27 +99,26 @@ public class Player extends NamedEntity implements Jsonable {
             .orElseThrow(() -> new IllegalStateException("No turn found for phase " + phase));
     }
 
-    public void addHero(HeroInGame hero) throws RoleAlreadyChosenException {
+    public void addHero(Hero hero) throws RoleAlreadyChosenException {
         if (heroes == null) heroes = Lists.newArrayList(hero);
-        else if (hasRoleAlreadyBeenChosen(hero.getHero().getRole()))
+        else if (hasRoleAlreadyBeenChosen(hero.getRole()))
             throw new RoleAlreadyChosenException();
         else heroes.add(hero);
     }
 
     public boolean hasRoleAlreadyBeenChosen(Role role) {
-        return heroes.stream().anyMatch(hero -> hero.getHero().getRole().equals(role));
+        return heroes.stream().anyMatch(hero -> hero.getRole().equals(role));
     }
 
     public void onDeleteSetNull() {
-        heroes.forEach(HeroInGame::onDeleteSetNull);
      //   game.setPlayers(game.getPlayers().stream().filter(player -> !player.equals(this)).collect(Collectors.toList()));
         deck.onDeleteSetNull();
         game = null;
     }
 
     public int getHealth() {
-        HeroInGame hero = this.getHeroes().get(0);
-    	return hero.getHero().getHealth() - wounds;
+        Hero hero = this.getHeroes().get(0);
+    	return hero.getHealth() - wounds;
     }
 
     @Override

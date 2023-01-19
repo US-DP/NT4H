@@ -35,7 +35,7 @@ public class ProductService {
     public void buyProduct(Player player, ProductInGame productInGame) throws NoMoneyException, NotInSaleException, CapacitiesRequiredException {
         ProductInGame selectedProduct = getProductInGameById(productInGame.getId());
         List<StateCapacity> stateCapacities = player.getHeroes().stream()
-            .flatMap(heroInGame -> heroInGame.getHero().getCapacities().stream().map(Capacity::getStateCapacity))
+            .flatMap(hero -> hero.getCapacities().stream().map(Capacity::getStateCapacity))
             .collect(Collectors.toList());
         List<StateCapacity> capacitiesNeeded = productInGame.getProduct().getCapacity().stream().map(Capacity::getStateCapacity).collect(Collectors.toList());
         stateCapacities.retainAll(capacitiesNeeded);

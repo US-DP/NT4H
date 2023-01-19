@@ -3,7 +3,7 @@
 
 <div class="container">
     <c:if test="${currentPlayer.health > 0}">
-        <c:forEach var="i" begin="0" end="${currentPlayer.health}">
+        <c:forEach var="i" begin="0" end="${currentPlayer.health-1}">
             <img src="/resources/images/heart_hero.gif" width="50" height="50">
         </c:forEach>
     </c:if>

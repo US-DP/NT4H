@@ -11,6 +11,7 @@ import org.springframework.samples.nt4h.game.GameService;
 import org.springframework.samples.nt4h.game.exceptions.*;
 import org.springframework.samples.nt4h.phase.Phase;
 import org.springframework.samples.nt4h.player.Player;
+import org.springframework.samples.nt4h.player.exceptions.AllDeadException;
 import org.springframework.samples.nt4h.player.exceptions.PlayerIsDeadException;
 import org.springframework.samples.nt4h.player.exceptions.RoleAlreadyChosenException;
 import org.springframework.samples.nt4h.phase.exceptions.*;
@@ -45,6 +46,7 @@ public class ExceptionHandlerConfiguration
     private static final String PAGE_MARKET = "redirect:/market";
     private static final String PAGE_REESTABLISHMENT = "redirect:/reestablishment";
     private final static String PAGE_HERO_ATTACK = "redirect:/heroAttack";
+    private final static String PAGE_END = "redirect:/end";
 
     private final static String PAGE_START = "redirect:/start";
 
@@ -213,6 +215,13 @@ public class ExceptionHandlerConfiguration
         game.setCurrentPlayer(nextPlayer.get());
         game.setCurrentTurn(turnService.getTurnsByPhaseAndPlayerId(Phase.START, nextPlayer.get().getId()));
         gameService.saveGame(game);
-        return PAGE_GAME_LOBBY;
+        return PAGE_START;
+    }
+
+    @ExceptionHandler(AllDeadException.class)
+    public String handleAllDeadException(HttpSession session) {
+        session.setAttribute("message", "All players are dead.");
+        session.setAttribute("messageType", "danger");
+        return PAGE_END;
     }
 }

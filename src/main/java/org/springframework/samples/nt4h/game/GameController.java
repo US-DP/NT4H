@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.samples.nt4h.card.hero.Hero;
-import org.springframework.samples.nt4h.card.hero.HeroInGame;
 import org.springframework.samples.nt4h.card.hero.HeroService;
 import org.springframework.samples.nt4h.game.exceptions.*;
 import org.springframework.samples.nt4h.message.Advise;
@@ -90,8 +89,8 @@ public class GameController {
     }
 
     @ModelAttribute("newHero")
-    private HeroInGame getHero() {
-        return new HeroInGame();
+    private Hero getHero() {
+        return new Hero();
     }
 
 
@@ -147,7 +146,7 @@ public class GameController {
         return VIEW_GAME_LIST;
     }
 
-    // Parida actual
+    // Partida actual
     @GetMapping("/current")
     public String showCurrentGame(HttpSession session, HttpServletRequest request) {
         Game game = getGame();
@@ -189,10 +188,11 @@ public class GameController {
 
     // Analizamos la elección del héroe.
     @PostMapping(value = "/heroSelect")
-    public String processHeroSelectForm(HeroInGame heroInGame) throws RoleAlreadyChosenException, HeroAlreadyChosenException, PlayerIsReadyException {
+    public String processHeroSelectForm(Hero hero) throws RoleAlreadyChosenException, HeroAlreadyChosenException, PlayerIsReadyException {
         Player loggedPlayer = getPlayer();
         Game game = getGame();
-        gameService.addHeroToPlayer(loggedPlayer, heroInGame, game);
+        Hero heroSelected = heroService.getHeroByName(hero.getName());
+        gameService.addHeroToPlayer(loggedPlayer, heroSelected, game);
         return PAGE_CURRENT_GAME;
     }
 
