@@ -33,4 +33,6 @@ public class Ability extends Card {
 
     @NotNull
     private String pathName;
+
+    private boolean enemyIsNeeded;
 }
