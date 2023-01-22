@@ -29,7 +29,7 @@ public class DeckService {
     private final AbilityService abilityService;
     private final PlayerService playerService;
     private final Advise advise;
-    private final Integer SIZE_HAND = 5;
+    private final Integer SIZE_HAND = 4;
 
     @Transactional(rollbackFor = Exception.class)
     public void saveDeck(Deck deck) {
@@ -185,14 +185,12 @@ public class DeckService {
             Ability ability = totalAbilities.get(i);
             AbilityInGame abilityInGame = AbilityInGame.fromAbility(ability, player);
             abilityService.saveAbilityInGame(abilityInGame);
-            Boolean haveLessThanFiveAndIsUniclass = (i < SIZE_HAND && player.getHeroes().size() == 1);
-            Boolean isTheFirstHeroInMulticlass = deck.getInDeck().isEmpty() && i < 3 && player.getHeroes().size() == 2;
-            Boolean isTheSecondHeroInMUlticlass = (i < 2 && player.getHeroes().size() == 2);
-            if (haveLessThanFiveAndIsUniclass || isTheFirstHeroInMulticlass || isTheSecondHeroInMUlticlass)
+            Boolean isUniclass = (i < SIZE_HAND && player.getHeroes().size() == 1);
+            Boolean isMulticlass = (i < 2 && player.getHeroes().size() == 2);
+            if (isUniclass || isMulticlass)
                 deck.getInHand().add(abilityInGame);
             else
                 deck.getInDeck().add(abilityInGame);
-
         }
         saveDeck(deck);
     }

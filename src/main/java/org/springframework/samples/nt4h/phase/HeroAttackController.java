@@ -125,11 +125,7 @@ public class HeroAttackController {
             advise.heroAttack(usedAbility, attackedEnemy);
             cacheManager.setAttackedEnemy(session, attackedEnemy.getId());
         }
-
         Optional<Enemy> nighLord = game.getActualOrcs().stream().map(EnemyInGame::getEnemy).filter(Enemy::getIsNightLord).findFirst();
-
-
-
         return nighLord.map(enemy -> PAGE_ABILITY + "/" + enemy.getName().toLowerCase() + "/" + usedAbility.getId()).orElse(PAGE_ABILITY);
     }
 

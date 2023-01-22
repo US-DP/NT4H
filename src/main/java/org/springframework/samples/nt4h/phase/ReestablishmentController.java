@@ -105,7 +105,6 @@ public class ReestablishmentController {
 
     @PostMapping
     public String discardAbility(Turn turn) throws NoCurrentPlayer {
-        Game game = getGame();
         Player currentPlayer = getCurrentPlayer();
         if (getLoggedPlayer() != currentPlayer)
             throw new NoCurrentPlayer();
