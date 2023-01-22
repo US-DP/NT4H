@@ -18,11 +18,4 @@ public class Card extends NamedEntity {
     @URL
     private String frontImage;
 
-    @URL
-    private String backImage;
-
-    @NotNull
-    @Min(-1)
-    private Integer maxUses;
-
 }

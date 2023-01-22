@@ -33,11 +33,7 @@ public class AchievementController {
 
     @ModelAttribute("achievementType")
     public List<AchievementType> getAchievementType() {
-        return Lists.newArrayList(AchievementType.PLAYED_GAMES,
-            AchievementType.WON_GAMES, AchievementType.DURATION,
-            AchievementType.TOTAL_GOLD, AchievementType.TOTAL_GLORY,
-            AchievementType.DMG_TO_ORCS, AchievementType.KILLED_ORCS,
-            AchievementType.KILLED_WARLORDS);
+        return List.of(AchievementType.values());
     }
 
     @GetMapping

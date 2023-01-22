@@ -92,7 +92,7 @@ public class ProductService {
         Collections.shuffle(shuffledProducts);
         shuffledProducts.forEach(
             product -> IntStream.range(0, product.getQuantity()).forEach(i -> {
-                    ProductInGame productInGame = ProductInGame.builder().product(product).game(game).stateProduct(StateProduct.IN_SALE).timesUsed(0).build();
+                    ProductInGame productInGame = ProductInGame.builder().product(product).game(game).stateProduct(StateProduct.IN_SALE).build();
                     productInGame.setName(product.getName());
                     saveProductInGame(productInGame);
                 }

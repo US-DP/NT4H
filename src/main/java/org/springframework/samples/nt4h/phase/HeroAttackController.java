@@ -102,7 +102,7 @@ public class HeroAttackController {
     }
 
     @PostMapping
-    public String modifyCardAttributes(Turn turn, HttpSession session) throws NoCurrentPlayer, WithOutAbilityException {
+    public String modifyCardAttributes(Turn turn, HttpSession session) throws NoCurrentPlayer, WithOutAbilityException, WithOutEnemyException {
         Player player = getPlayer();
         Game game = getGame();
         Player loggedPlayer = getLoggedPlayer();
@@ -112,6 +112,8 @@ public class HeroAttackController {
         EnemyInGame attackedEnemy = turn.getCurrentEnemy();
         if (usedAbility == null)
             throw new WithOutAbilityException();
+        if (usedAbility.getAbility().isEnemyIsNeeded() && attackedEnemy == null)
+            throw new WithOutEnemyException();
         Turn oldTurn = turnService.getTurnsByPhaseAndPlayerId(Phase.HERO_ATTACK, player.getId());
         playerService.savePlayer(player);
         oldTurn.addEnemy(attackedEnemy);
@@ -119,9 +121,14 @@ public class HeroAttackController {
         oldTurn.addAbility(usedAbility);
         oldTurn.setCurrentAbility(usedAbility);
         turnService.saveTurn(oldTurn);
-        advise.heroAttack(usedAbility, attackedEnemy);
+        if (attackedEnemy != null) {
+            advise.heroAttack(usedAbility, attackedEnemy);
+            cacheManager.setAttackedEnemy(session, attackedEnemy.getId());
+        }
+
         Optional<Enemy> nighLord = game.getActualOrcs().stream().map(EnemyInGame::getEnemy).filter(Enemy::getIsNightLord).findFirst();
-        cacheManager.setAttackedEnemy(session, attackedEnemy.getId());
+
+
 
         return nighLord.map(enemy -> PAGE_ABILITY + "/" + enemy.getName().toLowerCase() + "/" + usedAbility.getId()).orElse(PAGE_ABILITY);
     }
@@ -139,11 +146,10 @@ public class HeroAttackController {
         EnemyInGame attackedEnemy = turn.getCurrentEnemy();
         if (usedAbility == null)
             throw new WithOutAbilityException();
-        if (attackedEnemy == null)
-            throw new WithOutEnemyException();
-        Integer effectDamage = cacheManager.getSharpeningStone(session) + cacheManager.getAttack(session);
         List<EnemyInGame> enemies = cacheManager.getEnemiesAlsoAttacked(session);
-        enemies.add(attackedEnemy);
+        if (attackedEnemy != null && !enemies.contains(attackedEnemy))
+            enemies.add(attackedEnemy);
+        Integer effectDamage = cacheManager.getSharpeningStone(session) + cacheManager.getAttack(session);
         List<Integer> enemiesMoreDamage = enemies.stream().map(enemy -> cacheManager.getEnemiesThatReceiveMoreDamageForEnemy(session, enemy)).collect(Collectors.toList());
         gameService.attackEnemies(usedAbility, effectDamage, enemies, enemiesMoreDamage, player, game, getLoggedUser().getId());
         if (cacheManager.hasToBeDeletedAbility(session))

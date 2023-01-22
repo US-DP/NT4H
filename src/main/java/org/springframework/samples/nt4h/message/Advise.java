@@ -108,7 +108,7 @@ public class Advise {
         messageService.createNotification(getGame(), getCurrentPlayer().getName() + " has bought " + productInGame.getProduct().getName() + ".");
     }
 
-    public void addEnemies(List<EnemyInGame> added, Game game) {
+    public void addEnemies(List<EnemyInGame> added) {
         StringBuilder enemies = new StringBuilder();
         for (EnemyInGame enemy : added) {
             enemies.append(enemy.getEnemy().getName()).append(", ");
@@ -116,7 +116,7 @@ public class Advise {
         messageService.createNotification(getGame(), getCurrentPlayer().getName() + " has added " + enemies + "to the game.");
     }
 
-    public void discardAbilityInHand(AbilityInGame ability, Game game) {
+    public void discardAbilityInHand(AbilityInGame ability) {
         messageService.createNotification(getGame(), getCurrentPlayer().getName() + " has discarded " + ability.getAbility().getName() + " from hand.");
     }
 
@@ -130,7 +130,7 @@ public class Advise {
         messageService.createNotification(getGame(), getCurrentPlayer().getName() + " is choosing between two options, evade or attack.");
     }
 
-    public void addAbilityInHand(List<AbilityInGame> takeNewCard, Game game) {
+    public void addAbilityInHand(List<AbilityInGame> takeNewCard) {
         StringBuilder abilities = new StringBuilder();
         for(AbilityInGame ability : takeNewCard) {
             System.out.println("Ability: " + ability.getAbility().getName());

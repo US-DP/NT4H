@@ -89,7 +89,6 @@ public class EnemyAttackController {
         Game game = getGame();
         if (getCurrentPlayer() == getLoggedPlayer() && damage == null) {
             int defendedDmg = cacheManager.getDefend(session);
-            System.out.println("Defended dmg: " + defendedDmg);
             Predicate<EnemyInGame> hasPreventedDamage = enemy -> !(cacheManager.hasPreventDamageFromEnemies(session, enemy));
             List<EnemyInGame> enemiesInATrap = cacheManager.getCapturedEnemies(session);
             damage = gameService.attackEnemyToActualPlayer(game, hasPreventedDamage, defendedDmg, enemiesInATrap);

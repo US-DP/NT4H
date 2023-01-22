@@ -61,7 +61,6 @@ C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\s
 C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\message\CacheManager.java
 C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\game\GameService.java
 C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\phase\HeroAttackController.java
-C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\card\hero\HeroInGame.java
 C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\user\UserController.java
 C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\achievement\AchievementType.java
 C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\phase\exceptions\WithOutEnemyException.java
@@ -69,6 +68,7 @@ C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\s
 C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\card\hero\HeroFormatter.java
 C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\user\User.java
 C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\game\exceptions\HeroAlreadyChosenException.java
+C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\player\exceptions\PlayerIsDeadException.java
 C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\achievement\Achievement.java
 C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\achievement\AchievementService.java
 C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\user\AdminController.java
@@ -99,6 +99,7 @@ C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\s
 C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\card\product\inGame\ProductInGameFormatter.java
 C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\card\hero\Hero.java
 C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\statistic\StatisticRepository.java
+C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\player\exceptions\AllDeadException.java
 C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\card\ability\AbilityCardType.java
 C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\card\hero\Role.java
 C:\Users\alex0\Documents\lenguajes\Java\NT4H\src\main\java\org\springframework\samples\nt4h\card\hero\HeroService.java

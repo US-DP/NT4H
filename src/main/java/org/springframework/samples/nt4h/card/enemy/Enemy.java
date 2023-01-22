@@ -28,9 +28,6 @@ public class Enemy extends Card {
     @Range(min = 0, max = 4)
     private Integer hiddenGold;
 
-    @Range(min = 0, max = 4)
-    private Integer notHiddenGold;
-
     @NotNull
     private Boolean hasCure;
 
@@ -41,10 +38,10 @@ public class Enemy extends Card {
     private Boolean isNightLord;
 
     public Integer getGlory() {
-        return notHiddenGlory;
+        return notHiddenGlory + hiddenGlory;
     }
 
     public Integer getGold() {
-        return notHiddenGold;
+        return hiddenGold;
     }
 }

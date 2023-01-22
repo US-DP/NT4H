@@ -20,9 +20,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class ProductInGame extends NamedEntity {
 
-    @Min(0)
-    private Integer timesUsed;
-
     @NotNull
     @Enumerated(EnumType.STRING)
     private StateProduct stateProduct;

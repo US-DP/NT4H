@@ -96,7 +96,7 @@ public class ReestablishmentController {
             List<EnemyInGame> enemiesInBattle = game.getActualOrcs();
             gameService.restoreEnemyLife(enemiesInBattle);
             List<EnemyInGame> added = gameService.addNewEnemiesToBattle(game);
-            advise.addEnemies(added, game);
+            advise.addEnemies(added);
             hasAddedEnemies = true;
             playerService.savePlayer(currentPlayer);
         }
@@ -114,7 +114,7 @@ public class ReestablishmentController {
         oldTurn.addAbility(currentAbility);
         turnService.saveTurn(oldTurn);
         deckService.specificCardFromHandToDiscard(currentPlayer.getDeck(), currentAbility);
-        advise.discardAbilityInHand(currentAbility, game);
+        advise.discardAbilityInHand(currentAbility);
         return PAGE_REESTABLISHMENT;
     }
 

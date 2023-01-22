@@ -224,4 +224,11 @@ public class ExceptionHandlerConfiguration
         session.setAttribute("messageType", "danger");
         return PAGE_END;
     }
+
+    @ExceptionHandler(WithOutEnemyException.class)
+    public String handleWithOutEnemyException(HttpSession session) {
+        session.setAttribute("message", "You must choose an enemy.");
+        session.setAttribute("messageType", "danger");
+        return PAGE_HERO_ATTACK;
+    }
 }
