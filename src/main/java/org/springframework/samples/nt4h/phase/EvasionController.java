@@ -1,7 +1,6 @@
 package org.springframework.samples.nt4h.phase;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.nt4h.card.ability.inGame.AbilityInGame;
 import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.game.GameService;
 import org.springframework.samples.nt4h.message.Advise;
@@ -39,14 +38,16 @@ public class EvasionController {
     private final PlayerService playerService;
     private final GameService gameService;
     private final Advise advise;
+    private final PhaseService phaseService;
 
     @Autowired
-    public EvasionController(UserService userService, TurnService turnService, PlayerService playerService, GameService gameService, Advise advise) {
+    public EvasionController(UserService userService, TurnService turnService, PlayerService playerService, GameService gameService, Advise advise, PhaseService phaseService) {
         this.userService = userService;
         this.turnService = turnService;
         this.playerService = playerService;
         this.gameService = gameService;
         this.advise = advise;
+        this.phaseService = phaseService;
     }
 
     @ModelAttribute("game")
@@ -91,36 +92,21 @@ public class EvasionController {
 
     @PostMapping
     public String postEvasion(@Valid Turn turn) throws NoCurrentPlayer, WithOutAbilityException {
-        Player player = getCurrentPlayer();
-        Player loggedPlayer = getLoggedPlayer();
-        if (loggedPlayer != player)
-            throw new NoCurrentPlayer();
-        // Descartar una carta.
-        AbilityInGame currentAbility = turn.getCurrentAbility();
-        if (currentAbility == null)
-            throw new WithOutAbilityException();
-        Turn oldTurn = turnService.getTurnsByPhaseAndPlayerId(Phase.EVADE, player.getId());
-        oldTurn.getUsedAbilities().add(currentAbility);
-        turnService.saveTurn(oldTurn);
-        player.getDeck().discardCardOnHand(currentAbility);
-        playerService.savePlayer(player);
-        advise.discardCard(currentAbility);
-        //
+        Player currentPlayer = getCurrentPlayer();
+        phaseService.isCurrentPlayer();
+        phaseService.discardOneCard(turn);
+        // advise.discardCard(currentAbility);
         return PAGE_EVASION;
     }
 
     @GetMapping("/next")
     public String nextTurn() throws WhenEvasionDiscardAtLeast2Exception {
         Player player = getCurrentPlayer();
+        Player loggedPlayer = getLoggedPlayer();
         Game game = getGame();
-        if (player != getGame().getCurrentPlayer())
-            return NEXT_TURN;
-        Turn turn = turnService.getTurnsByPhaseAndPlayerId(Phase.EVADE, player.getId());
-        if (turn.getUsedAbilities().size() < 2)
-            throw new WhenEvasionDiscardAtLeast2Exception();
-        game.setCurrentTurn(turnService.getTurnsByPhaseAndPlayerId(Phase.MARKET, player.getId()));
-        gameService.saveGame(game);
-        advise.passPhase(game);
+        if (player == loggedPlayer) {
+
+        }
         return NEXT_TURN;
     }
 

@@ -5,23 +5,23 @@ import lombok.AllArgsConstructor;
 import org.javatuples.Triplet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.samples.nt4h.card.ability.inGame.AbilityInGame;
 import org.springframework.samples.nt4h.card.ability.deck.DeckService;
-import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
+import org.springframework.samples.nt4h.card.ability.inGame.AbilityInGame;
 import org.springframework.samples.nt4h.card.enemy.EnemyService;
+import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
 import org.springframework.samples.nt4h.card.hero.Hero;
 import org.springframework.samples.nt4h.card.hero.HeroService;
 import org.springframework.samples.nt4h.card.product.ProductService;
 import org.springframework.samples.nt4h.exceptions.NotFoundException;
 import org.springframework.samples.nt4h.game.exceptions.*;
 import org.springframework.samples.nt4h.message.Advise;
+import org.springframework.samples.nt4h.phase.Phase;
 import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.player.PlayerService;
 import org.springframework.samples.nt4h.player.exceptions.AllDeadException;
 import org.springframework.samples.nt4h.player.exceptions.PlayerIsDeadException;
 import org.springframework.samples.nt4h.player.exceptions.RoleAlreadyChosenException;
 import org.springframework.samples.nt4h.statistic.StatisticService;
-import org.springframework.samples.nt4h.phase.Phase;
 import org.springframework.samples.nt4h.user.User;
 import org.springframework.samples.nt4h.user.UserService;
 import org.springframework.stereotype.Service;
@@ -39,10 +39,8 @@ public class GameService {
     private final GameRepository gameRepository;
     private final UserService userService;
     private final PlayerService playerService;
-    private final HeroService heroService;
     private final ProductService productService;
     private final EnemyService enemyService;
-    private final StatisticService statisticService;
     private final DeckService deckService;
     private final Advise advise;
     private static final Integer ORCS_IN_BATTLE = 3;
@@ -190,39 +188,9 @@ public class GameService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void deleteKilledEnemy(List<EnemyInGame> attackedEnemies, Game game, Player player, Integer userId) {
-        for(int e=0; e < attackedEnemies.size(); e++) {
-            EnemyInGame enemy = attackedEnemies.get(e);
-            if (enemy.getActualHealth() <= 0) {
-                statisticService.gainGold(player, enemy.getEnemy().getGold());
-                statisticService.gainGlory(player, enemy.getEnemy().getGlory());
-                statisticService.getNumDamageByUser(userId);
-                statisticService.getNumOrcsByUser(userId);
-                game.getActualOrcs().remove(enemy);
-                playerService.savePlayer(player);
-                saveGame(game);
-            } else {
-                playerService.savePlayer(player);
-            }
-        }
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public void attackEnemies(AbilityInGame usedAbility, Integer effectDamage, List<EnemyInGame> enemies, List<Integer> enemiesMoreDamage, Player player, Game game, Integer userId) {
-        if (usedAbility.getAttack() == 0)
-            return;
-        Integer damageToEnemy = usedAbility.getAttack() + effectDamage;
-        for (int e = 0; enemies.size() > e; e++) {
-            EnemyInGame affectedEnemy = enemies.get(e);
-            if (affectedEnemy.isNightLord())
-                statisticService.gainGlory(player, 1);
-            Integer extraDamage = enemiesMoreDamage.get(e);
-            Integer initialEnemyHealth = affectedEnemy.getActualHealth();
-            affectedEnemy.setActualHealth(initialEnemyHealth - (damageToEnemy + extraDamage));
-            statisticService.damageDealt(player, (damageToEnemy + extraDamage));
-            enemyService.saveEnemyInGame(affectedEnemy);
-        }
-        deleteKilledEnemy(enemies, game, player, userId);
+    public void deleteEnemyInGame(EnemyInGame enemy, Game game) {
+        game.getActualOrcs().remove(enemy);
+        saveGame(game);
     }
 
     @Transactional(rollbackFor = Exception.class)

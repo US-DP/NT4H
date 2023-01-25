@@ -4,6 +4,7 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsonable;
 import com.google.common.collect.Lists;
 import lombok.*;
+import org.springframework.samples.nt4h.card.enemy.Enemy;
 import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
 import org.springframework.samples.nt4h.card.hero.Hero;
 import org.springframework.samples.nt4h.game.exceptions.FullGameException;
@@ -99,6 +100,10 @@ public class Game extends NamedEntity implements Jsonable {
         if ((this.players.size()+1) > this.maxPlayers)
             throw new FullGameException();
         this.players.add(player);
+    }
+
+    public Optional<Enemy> getNightLordOnBattle() {
+        return actualOrcs.stream().map(EnemyInGame::getEnemy).filter(Enemy::getIsNightLord).findFirst();
     }
 
     public void addPlayerWithNewHero(Player player, Hero hero) throws HeroAlreadyChosenException, RoleAlreadyChosenException {

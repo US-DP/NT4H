@@ -9,7 +9,6 @@ import org.springframework.samples.nt4h.message.Message;
 import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.statistic.Statistic;
 import org.springframework.samples.nt4h.phase.exceptions.NoCurrentPlayer;
-import org.springframework.samples.nt4h.phase.exceptions.WithOutPhaseException;
 import org.springframework.samples.nt4h.turn.Turn;
 import org.springframework.samples.nt4h.turn.TurnService;
 import org.springframework.samples.nt4h.user.User;
@@ -36,14 +35,16 @@ public class StartController {
     private final Advise advise;
     private Boolean isChosen = false;
     private final CacheManager cacheManager;
+    private final PhaseService phaseService;
 
 
     @Autowired
-    public StartController(UserService userService, TurnService turnService, Advise advise, CacheManager cacheManager) {
+    public StartController(UserService userService, TurnService turnService, Advise advise, CacheManager cacheManager, PhaseService phaseService) {
         this.userService = userService;
         this.turnService = turnService;
         this.advise = advise;
         this.cacheManager = cacheManager;
+        this.phaseService = phaseService;
     }
 
     @ModelAttribute("game")
@@ -96,14 +97,10 @@ public class StartController {
     }
 
     @PostMapping
-    public String selectEvasion(Turn turn,  HttpSession session) throws NoCurrentPlayer, WithOutPhaseException {
+    public String selectEvasion(Turn turn) throws NoCurrentPlayer {
         Player player = getPlayer();
-        Player loggedPlayer = getLoggedPlayer();
         Game game = getGame();
-        if (loggedPlayer != player)
-            throw new NoCurrentPlayer();
-        if (turn.getPhase() == null)
-            throw new WithOutPhaseException();
+        phaseService.isCurrentPlayer();
         isChosen = false;
         turnService.chooseAttackOrEvasion(player, turn.getPhase(), game);
         advise.passPhase(game);

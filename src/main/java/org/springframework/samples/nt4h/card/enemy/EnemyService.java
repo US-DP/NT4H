@@ -4,6 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
 import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGameRepository;
 import org.springframework.samples.nt4h.exceptions.NotFoundException;
+import org.springframework.samples.nt4h.game.Game;
+import org.springframework.samples.nt4h.game.GameService;
+import org.springframework.samples.nt4h.player.Player;
+import org.springframework.samples.nt4h.statistic.StatisticService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +20,7 @@ import java.util.stream.Collectors;
 public class EnemyService {
     private final EnemyInGameRepository enemyInGameRepository;
     private final EnemyRepository enemyRepository;
+    private final StatisticService statisticService;
     private static final Integer NUM_NIGHTLORDS = 3;
 
 
@@ -73,6 +78,22 @@ public class EnemyService {
     public void increaseLife(EnemyInGame enemy) {
         enemy.setActualHealth(enemy.getActualHealth() + 1);
         saveEnemyInGame(enemy);
+    }
+
+    public void decreaseLife(Player player, EnemyInGame enemy, Integer damage) {
+        enemy.setActualHealth(enemy.getActualHealth() - damage);
+        statisticService.damageDealt(player, damage);
+        if (enemy.getActualHealth() <= 0) {
+            enemy.setActualHealth(0);
+            getTreasures(player, enemy);
+            enemyInGameRepository.delete(enemy);
+        }
+        saveEnemyInGame(enemy);
+    }
+
+    public void getTreasures(Player player, EnemyInGame enemy) {
+        statisticService.gainGold(player, enemy.getEnemy().getGold());
+        statisticService.gainGlory(player, enemy.getEnemy().getGlory());
     }
 
 

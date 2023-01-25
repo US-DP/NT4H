@@ -27,10 +27,12 @@ public class EndController {
 
     private final UserService userService;
     private final GameService gameService;
+    private final PhaseService phaseService;
 
-    public EndController(UserService userService, GameService gameService) {
+    public EndController(UserService userService, GameService gameService, PhaseService phaseService) {
         this.userService = userService;
         this.gameService = gameService;
+        this.phaseService = phaseService;
     }
 
     @ModelAttribute("loggedUser")
