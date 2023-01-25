@@ -74,7 +74,7 @@ public class MarketController {
     @ModelAttribute("loggedPlayer")
     public Player getLoggedPlayer() {
         User loggedUser = getLoggedUser();
-        return loggedUser.getPlayer() != null ? loggedUser.getPlayer() : Player.builder().statistic(Statistic.createStatistic()).build();
+        return loggedUser.getPlayer() != null ? loggedUser.getPlayer() : Player.builder().statistic(new Statistic()).build();
     }
 
     @ModelAttribute("loggedUser")
@@ -105,7 +105,7 @@ public class MarketController {
             throw new WithOutProductException();
         productService.buyProduct(player, productInGame);
         Turn oldTurn = turnService.getTurnsByPhaseAndPlayerId(Phase.MARKET, player.getId());
-        oldTurn.addProduct(productInGame);
+        oldTurn.getUsedProducts().add(productInGame);
         turnService.saveTurn(oldTurn);
         advise.buyProduct(productInGame);
         return PAGE_MARKET;

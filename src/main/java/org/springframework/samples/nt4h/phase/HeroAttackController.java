@@ -85,7 +85,7 @@ public class HeroAttackController {
     @ModelAttribute("loggedPlayer")
     private Player getLoggedPlayer() {
         User loggedUser = getLoggedUser();
-        return loggedUser.getPlayer() != null ? loggedUser.getPlayer() : Player.builder().statistic(Statistic.createStatistic()).build();
+        return loggedUser.getPlayer() != null ? loggedUser.getPlayer() : Player.builder().statistic(new Statistic()).build();
     }
 
     @ModelAttribute("chat")
@@ -116,9 +116,9 @@ public class HeroAttackController {
             throw new WithOutEnemyException();
         Turn oldTurn = turnService.getTurnsByPhaseAndPlayerId(Phase.HERO_ATTACK, player.getId());
         playerService.savePlayer(player);
-        oldTurn.addEnemy(attackedEnemy);
+        oldTurn.getUsedEnemies().add(attackedEnemy);
         oldTurn.setCurrentEnemy(attackedEnemy);
-        oldTurn.addAbility(usedAbility);
+        oldTurn.getUsedAbilities().add(usedAbility);
         oldTurn.setCurrentAbility(usedAbility);
         turnService.saveTurn(oldTurn);
         if (attackedEnemy != null) {

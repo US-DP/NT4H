@@ -85,7 +85,7 @@ public class GameService {
             throw new FullGameException();
         if (user.getPlayer() != null)
             throw new UserHasAlreadyAPlayerException();
-        Player newPlayer = Player.createPlayer(user, game, false);
+        Player newPlayer = new Player(user, game, false);
         playerService.createTurns(newPlayer);
         saveGame(game);
         user.setGame(game);
@@ -96,8 +96,8 @@ public class GameService {
 
     @Transactional(rollbackFor = FullGameException.class)
     public void createGame(User user, Game game) throws FullGameException {
-        game = Game.createGame(game.getName(), game.getMode(),  game.getMaxPlayers(), game.getPassword());
-        Player newPlayer = Player.createPlayer(user, game, true);
+        game = new Game(game.getName(), game.getMode(),  game.getMaxPlayers(), game.getPassword());
+        Player newPlayer = new Player(user, game, true);
         playerService.savePlayer(newPlayer);
         saveGame(game);
         userService.saveUser(user);

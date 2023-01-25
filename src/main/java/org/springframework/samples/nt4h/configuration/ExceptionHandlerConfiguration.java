@@ -206,14 +206,14 @@ public class ExceptionHandlerConfiguration
     }
 
     @ExceptionHandler(PlayerIsDeadException.class)
-    public String handlePlayerIsDeadException(HttpSession session) {
+    public String handlePlayerIsDeadException(HttpSession session) throws AllDeadException {
         session.setAttribute("message", "You are dead.");
         session.setAttribute("messageType", "danger");
         User loggedUser = userService.getLoggedUser();
         Game game = loggedUser.getGame();
-        Optional<Player> nextPlayer = game.getNextPlayer();
-        game.setCurrentPlayer(nextPlayer.get());
-        game.setCurrentTurn(turnService.getTurnsByPhaseAndPlayerId(Phase.START, nextPlayer.get().getId()));
+        Player nextPlayer = game.getNextPlayer();
+        game.setCurrentPlayer(nextPlayer);
+        game.setCurrentTurn(turnService.getTurnsByPhaseAndPlayerId(Phase.START, nextPlayer.getId()));
         gameService.saveGame(game);
         return PAGE_START;
     }

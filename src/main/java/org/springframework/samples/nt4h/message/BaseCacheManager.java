@@ -2,6 +2,7 @@ package org.springframework.samples.nt4h.message;
 
 import com.google.common.collect.Lists;
 import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
+import org.springframework.samples.nt4h.message.exceptions.EnemyNotFoundException;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -25,10 +26,20 @@ public class BaseCacheManager {
                 .collect(Collectors.toList());
     }
 
-    protected EnemyInGame parseEnemy(HttpSession session, Function<Integer, EnemyInGame> function) {
+    protected EnemyInGame parseEnemy(HttpSession session, Function<Integer, EnemyInGame> function) throws EnemyNotFoundException {
         Object enemy = session.getAttribute(ATTACKED_ENEMY);
-        Integer idAttackedEnemy = enemy == null ? null : Integer.parseInt(enemy.toString());
-        return idAttackedEnemy == null ? new EnemyInGame() : function.apply(idAttackedEnemy);
+        if (enemy == null)
+            throw new EnemyNotFoundException();
+        Integer idAttackedEnemy = Integer.parseInt(enemy.toString());
+        return function.apply(idAttackedEnemy);
+    }
+
+    public void addEnemies(HttpSession session, String name, EnemyInGame enemyInGame, Boolean predicate) {
+        Object enemies = session.getAttribute(name);
+        if (enemies == null)
+            session.setAttribute(name, enemyInGame.getId());
+        else if (!(predicate))
+            session.setAttribute(name, enemies + "," + enemyInGame.getId());
     }
 
     public void addEnemies(HttpSession session, String name, EnemyInGame enemyInGame, Predicate<EnemyInGame> predicate) {

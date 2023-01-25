@@ -27,9 +27,6 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "users")
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
 public class User extends BaseEntity implements Jsonable {
 
     @NotNull

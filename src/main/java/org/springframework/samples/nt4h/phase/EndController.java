@@ -56,7 +56,7 @@ public class EndController {
     @ModelAttribute("loggedPlayer")
     public Player getLoggedPlayer() {
         User loggedUser = getLoggedUser();
-        return loggedUser.getPlayer() != null ? loggedUser.getPlayer() : Player.builder().statistic(Statistic.createStatistic()).build();
+        return loggedUser.getPlayer() != null ? loggedUser.getPlayer() : Player.builder().statistic(new Statistic()).build();
     }
 
     @ModelAttribute("chat")
@@ -67,6 +67,7 @@ public class EndController {
     @GetMapping
     public String showEnd(ModelMap model) {
         List<Player> players = getGame().getPlayers();
+        // Puntuación final.
         List<Pair<Player, Integer>> pairs = new ArrayList<>();
         for (Player player : players) {
             Integer gold = player.getStatistic().getGold();
@@ -80,6 +81,7 @@ public class EndController {
         Integer won = winner.getStatistic().getNumWonGames();
         winner.getStatistic().setNumWonGames(won+1);
         userService.upRank(winner.getId());
+        //
         model.addAttribute("punctuations", pairs);
         return VIEW_END;
     }

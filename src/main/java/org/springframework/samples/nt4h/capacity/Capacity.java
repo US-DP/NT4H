@@ -13,9 +13,6 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Table(name = "capacities")
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
 public class Capacity extends BaseEntity {
     @NotNull
     @Enumerated(EnumType.STRING)

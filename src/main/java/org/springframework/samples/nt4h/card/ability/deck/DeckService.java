@@ -183,7 +183,7 @@ public class DeckService {
         Collections.shuffle(totalAbilities);
         for (int i = 0;(limit == null || i < limit) && i < totalAbilities.size(); i++) {
             Ability ability = totalAbilities.get(i);
-            AbilityInGame abilityInGame = AbilityInGame.fromAbility(ability, player);
+            AbilityInGame abilityInGame = new AbilityInGame(ability, player);
             abilityService.saveAbilityInGame(abilityInGame);
             Boolean isUniclass = (i < SIZE_HAND && player.getHeroes().size() == 1);
             Boolean isMulticlass = (i < 2 && player.getHeroes().size() == 2);

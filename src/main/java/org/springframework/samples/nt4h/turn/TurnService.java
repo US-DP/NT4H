@@ -25,12 +25,8 @@ public class TurnService {
 
     @Transactional
     public void createAllTurnForAPlayer(Player player) {
-        for (Phase phase : Phase.values()) {
-            Turn turn = Turn.builder().player(player).game(player.getGame()).phase(phase)
-                .usedEnemies(Lists.newArrayList()).usedAbilities(Lists.newArrayList()).build();
-            player.getTurns().add(turn);
-            saveTurn(turn);
-        }
+        for (Phase phase : Phase.values())
+            saveTurn(new Turn(player, phase));
     }
 
     @Transactional(readOnly = true)

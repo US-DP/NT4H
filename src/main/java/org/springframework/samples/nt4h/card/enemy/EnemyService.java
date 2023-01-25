@@ -3,6 +3,7 @@ package org.springframework.samples.nt4h.card.enemy;
 import lombok.AllArgsConstructor;
 import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
 import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGameRepository;
+import org.springframework.samples.nt4h.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +22,7 @@ public class EnemyService {
     // EnemyInGame
     @Transactional(readOnly = true)
     public EnemyInGame getEnemyInGameById(int id) {
-        return enemyInGameRepository.findById(id).orElse(new EnemyInGame());
+        return enemyInGameRepository.findById(id).orElseThrow(() -> new NotFoundException("EnemyInGame not found"));
     }
 
     @Transactional
@@ -52,7 +53,7 @@ public class EnemyService {
         if(numPlayers == 2) limitEnemies = 17;
         else if(numPlayers == 3) limitEnemies = 23;
         else if(numPlayers == 4) limitEnemies = 27;
-        List<EnemyInGame> orcs = getAllNotNightLords().stream().map(enemy -> EnemyInGame.createEnemy(false, enemy)).collect(Collectors.toList());
+        List<EnemyInGame> orcs = getAllNotNightLords().stream().map(EnemyInGame::new).collect(Collectors.toList());
         Collections.shuffle(orcs);
         List<EnemyInGame> limitedOrcs = orcs.subList(0, limitEnemies);
         saveEnemyInGame(limitedOrcs.get(0));
@@ -63,7 +64,7 @@ public class EnemyService {
     @Transactional
     public EnemyInGame addNightLordToGame() {
         Enemy nightLord = getNightLord();
-        EnemyInGame nightLordInGame = EnemyInGame.createEnemy(true, nightLord);
+        EnemyInGame nightLordInGame = new EnemyInGame(nightLord);
         saveEnemyInGame(nightLordInGame);
         return nightLordInGame;
     }

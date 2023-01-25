@@ -6,6 +6,7 @@ import org.springframework.samples.nt4h.card.ability.deck.DeckService;
 import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
 import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.message.CacheManager;
+import org.springframework.samples.nt4h.message.exceptions.EnemyNotFoundException;
 import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.player.exceptions.AllDeadException;
 import org.springframework.samples.nt4h.player.exceptions.PlayerIsDeadException;
@@ -75,7 +76,7 @@ public class AbilityThiefController {
 
     // Al corazón. (fufa)
     @GetMapping("/toTheHeart")
-    private String toTheHeart(HttpSession session) throws PlayerIsDeadException, AllDeadException {
+    private String toTheHeart(HttpSession session) throws PlayerIsDeadException, AllDeadException, EnemyNotFoundException {
         Player currentPlayer = getCurrentPlayer();
         // Comprobamos si podemos cargarnos al enemigo.
         EnemyInGame attackedEnemy = cacheManager.getAttackedEnemy(session);
@@ -103,7 +104,7 @@ public class AbilityThiefController {
 
     // Ataque furtivo. (fufa)
     @GetMapping("/stealthAttack")
-    private String stealthAttack(HttpSession session) {
+    private String stealthAttack(HttpSession session) throws EnemyNotFoundException {
         Player currentPlayer = getCurrentPlayer();
         // Comprobamos si podemos cargarnos al enemigo.
         EnemyInGame attackedEnemy = cacheManager.getAttackedEnemy(session);
@@ -121,7 +122,7 @@ public class AbilityThiefController {
 
     // Ballesta precisa. (fufa)
     @GetMapping("/preciseBow")
-    private String preciseBow(HttpSession session) {
+    private String preciseBow(HttpSession session) throws EnemyNotFoundException {
         // Si ya ha sido atacado con ballesta precisa, realiza más daño.
         if (cacheManager.hasAlreadyAttackedWithPreciseBow(session))
             cacheManager.addAttack(session,  1);
@@ -140,7 +141,7 @@ public class AbilityThiefController {
 
     // Engañar. (fufa)
     @GetMapping("/deceive")
-    private String deceive(HttpSession session) {
+    private String deceive(HttpSession session) throws EnemyNotFoundException {
         Player currentPlayer = getCurrentPlayer();
         // Elegimos el enemigo que no va a realizar daño.
         Statistic statistic = currentPlayer.getStatistic();
@@ -188,7 +189,7 @@ public class AbilityThiefController {
 
     // Trampa
     @GetMapping("/trap")
-    public String trap(HttpSession session) {
+    public String trap(HttpSession session) throws EnemyNotFoundException {
         // El enemigo seleccionado morirá al terminar la fase de ataque.
         EnemyInGame attackedEnemy = cacheManager.getAttackedEnemy(session);
         if (attackedEnemy == null) {

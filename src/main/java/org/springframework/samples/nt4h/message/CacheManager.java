@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
 import org.springframework.samples.nt4h.card.enemy.EnemyService;
 import org.springframework.samples.nt4h.game.Game;
+import org.springframework.samples.nt4h.message.exceptions.EnemyNotFoundException;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Component
@@ -119,7 +121,7 @@ public class CacheManager extends BaseCacheManager {
     }
 
     // Enemigo que ha sido seleccionado.
-    public EnemyInGame getAttackedEnemy(HttpSession session) {
+    public EnemyInGame getAttackedEnemy(HttpSession session) throws EnemyNotFoundException {
         return parseEnemy(session, enemyService::getEnemyInGameById);
     }
 
@@ -158,8 +160,8 @@ public class CacheManager extends BaseCacheManager {
     }
 
     // Ya se ha atacado con el arco preciso?
-    public void addAlreadyAttackedWithPreciseBow(HttpSession session) {
-        addEnemies(session, ALREADY_ATTACKED_WITH_PRECISE_BOW, getAttackedEnemy(session), enemy -> hasAlreadyAttackedWithPreciseBow(session));
+    public void addAlreadyAttackedWithPreciseBow(HttpSession session) throws EnemyNotFoundException {
+        addEnemies(session, ALREADY_ATTACKED_WITH_PRECISE_BOW, getAttackedEnemy(session), hasAlreadyAttackedWithPreciseBow(session));
     }
 
     public List<EnemyInGame> getAlreadyAttackedWithPreciseBow(HttpSession session) {
@@ -170,14 +172,14 @@ public class CacheManager extends BaseCacheManager {
         session.removeAttribute(ALREADY_ATTACKED_WITH_PRECISE_BOW);
     }
 
-    public Boolean hasAlreadyAttackedWithPreciseBow(HttpSession session) {
-        return getAlreadyAttackedWithPreciseBow(session).stream().anyMatch(enemy -> enemy.getId().equals(getAttackedEnemy(session).getId()));
+    public Boolean hasAlreadyAttackedWithPreciseBow(HttpSession session) throws EnemyNotFoundException {
+        EnemyInGame attackedEnemy = getAttackedEnemy(session);
+        return getAlreadyAttackedWithPreciseBow(session).stream().anyMatch(enemy -> enemy.getId().equals(attackedEnemy.getId()));
     }
 
     // Permite anular el ataque de varios enemigos.
-    public void addPreventDamageFromEnemies(HttpSession session) {
-        System.out.println("addPreventDamageFromEnemies " + getAttackedEnemy(session).getId());
-        addEnemies(session, PREVENT_DAMAGE_FROM_ENEMIES, getAttackedEnemy(session), enemy -> hasPreventDamageFromEnemies(session));
+    public void addPreventDamageFromEnemies(HttpSession session) throws EnemyNotFoundException {
+        addEnemies(session, PREVENT_DAMAGE_FROM_ENEMIES, getAttackedEnemy(session), hasPreventDamageFromEnemies(session));
     }
 
     public void addAllInBattlePreventDamageFromEnemies(HttpSession session, Game game) {
@@ -192,8 +194,9 @@ public class CacheManager extends BaseCacheManager {
         session.removeAttribute(PREVENT_DAMAGE_FROM_ENEMIES);
     }
 
-    public Boolean hasPreventDamageFromEnemies(HttpSession session) {
-        return getPreventDamageFromEnemies(session).stream().anyMatch(enemy -> enemy.getId().equals(getAttackedEnemy(session).getId()));
+    public Boolean hasPreventDamageFromEnemies(HttpSession session) throws EnemyNotFoundException {
+        EnemyInGame attackedEnemy = getAttackedEnemy(session);
+        return getPreventDamageFromEnemies(session).stream().anyMatch(enemy -> enemy.getId().equals(attackedEnemy.getId()));
     }
 
     public Boolean hasPreventDamageFromEnemies(HttpSession session, EnemyInGame enemy) {
@@ -201,12 +204,12 @@ public class CacheManager extends BaseCacheManager {
     }
 
     // Enemigos capturados.
-    public void addCapturedEnemies(HttpSession session) {
-        addEnemies(session, CAPTURED_ENEMIES, getAttackedEnemy(session), enemy -> hasCapturedEnemies(session));
+    public void addCapturedEnemies(HttpSession session) throws EnemyNotFoundException {
+        addEnemies(session, CAPTURED_ENEMIES, getAttackedEnemy(session), hasCapturedEnemies(session));
     }
 
     public void addCapturedEnemies(HttpSession session, EnemyInGame enemy) {
-        addEnemies(session, CAPTURED_ENEMIES, enemy, enemyInGame -> hasCapturedEnemies(session, enemyInGame));
+        addEnemies(session, CAPTURED_ENEMIES, enemy, enemyInGame ->  hasCapturedEnemies(session, enemyInGame));
     }
 
     public List<EnemyInGame> getCapturedEnemies(HttpSession session) {
@@ -217,8 +220,9 @@ public class CacheManager extends BaseCacheManager {
         session.removeAttribute(CAPTURED_ENEMIES);
     }
 
-    public Boolean hasCapturedEnemies(HttpSession session) {
-        return getCapturedEnemies(session).stream().anyMatch(enemy -> enemy.getId().equals(getAttackedEnemy(session).getId()));
+    public Boolean hasCapturedEnemies(HttpSession session) throws EnemyNotFoundException {
+        EnemyInGame attackedEnemy = getAttackedEnemy(session);
+        return getCapturedEnemies(session).stream().anyMatch(enemy -> enemy.getId().equals(attackedEnemy.getId()));
     }
 
     public Boolean hasCapturedEnemies(HttpSession session, EnemyInGame enemy) {
@@ -226,8 +230,8 @@ public class CacheManager extends BaseCacheManager {
     }
 
     // Enemigos que también van a ser atacados.
-    public void addEnemiesAlsoAttacked(HttpSession session) {
-        addEnemies(session, ENEMIES_ALSO_ATTACKED, getAttackedEnemy(session), enemy -> hasEnemiesAlsoAttacked(session));
+    public void addEnemiesAlsoAttacked(HttpSession session) throws EnemyNotFoundException {
+        addEnemies(session, ENEMIES_ALSO_ATTACKED, getAttackedEnemy(session), hasEnemiesAlsoAttacked(session));
     }
 
     public void addAllEnemiesAlsoAttacked(HttpSession session, Game game) {
@@ -242,12 +246,13 @@ public class CacheManager extends BaseCacheManager {
         session.removeAttribute(ENEMIES_ALSO_ATTACKED);
     }
 
-    public Boolean hasEnemiesAlsoAttacked(HttpSession session) {
-        return getEnemiesAlsoAttacked(session).stream().anyMatch(enemy -> enemy.getId().equals(getAttackedEnemy(session).getId()));
+    public Boolean hasEnemiesAlsoAttacked(HttpSession session) throws EnemyNotFoundException {
+        EnemyInGame attackedEnemy = getAttackedEnemy(session);
+        return getEnemiesAlsoAttacked(session).stream().anyMatch(enemy -> enemy.getId().equals(attackedEnemy.getId()));
     }
 
     // Enemigos a los que va a hacer más daño.
-    public void addEnemiesThatReceiveMoreDamage(HttpSession session) {
+    public void addEnemiesThatReceiveMoreDamage(HttpSession session) throws EnemyNotFoundException {
         addEnemies(session, ENEMIES_THAT_RECEIVE_MORE_DAMAGE, getAttackedEnemy(session));
     }
 
@@ -264,8 +269,8 @@ public class CacheManager extends BaseCacheManager {
     }
 
     // Ya se ha atacado con el bastón?
-    public void addAlreadyAttackedWithStaff(HttpSession session) {
-        addEnemies(session, ALREADY_ATTACKED_WITH_STAFF, getAttackedEnemy(session), enemy -> hasAlreadyAttackedWithStaff(session));
+    public void addAlreadyAttackedWithStaff(HttpSession session) throws EnemyNotFoundException {
+        addEnemies(session, ALREADY_ATTACKED_WITH_STAFF, getAttackedEnemy(session), hasAlreadyAttackedWithStaff(session));
     }
 
     public List<EnemyInGame> getAlreadyAttackedWithStaff(HttpSession session) {
@@ -276,8 +281,9 @@ public class CacheManager extends BaseCacheManager {
         session.removeAttribute(ALREADY_ATTACKED_WITH_STAFF);
     }
 
-    public Boolean hasAlreadyAttackedWithStaff(HttpSession session) {
-        return getAlreadyAttackedWithStaff(session).stream().anyMatch(enemy -> enemy.getId().equals(getAttackedEnemy(session).getId()));
+    public Boolean hasAlreadyAttackedWithStaff(HttpSession session) throws EnemyNotFoundException {
+        EnemyInGame attackedEnemy = getAttackedEnemy(session);
+        return getAlreadyAttackedWithStaff(session).stream().anyMatch(enemy -> enemy.getId().equals(attackedEnemy.getId()));
     }
 
     // Tenemos que borrar la habilidad?

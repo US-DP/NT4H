@@ -4,6 +4,7 @@ import org.springframework.samples.nt4h.card.ability.deck.Deck;
 import org.springframework.samples.nt4h.card.ability.deck.DeckService;
 import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.message.CacheManager;
+import org.springframework.samples.nt4h.message.exceptions.EnemyNotFoundException;
 import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.player.PlayerService;
 import org.springframework.samples.nt4h.player.exceptions.AllDeadException;
@@ -105,7 +106,7 @@ public class AbilityWizardController {
 
     // Disparo gélido
     @GetMapping("/frostShot")
-    private String frostShot(HttpSession session) throws PlayerIsDeadException, AllDeadException {
+    private String frostShot(HttpSession session) throws PlayerIsDeadException, AllDeadException, EnemyNotFoundException {
         Player currentPlayer = getCurrentPlayer();
         // Roba una carta.
         deckService.fromDeckToHand(currentPlayer, currentPlayer.getDeck());
@@ -116,7 +117,7 @@ public class AbilityWizardController {
 
     // Flecha corrosiva
     @GetMapping("/corrosiveArrow")
-    private String corrosiveArrow(HttpSession session) throws PlayerIsDeadException, AllDeadException {
+    private String corrosiveArrow(HttpSession session) throws PlayerIsDeadException, AllDeadException, EnemyNotFoundException {
         Player currentPlayer = getCurrentPlayer();
         // Pierde una carta.
         deckService.fromDeckToDiscard(currentPlayer, currentPlayer.getDeck());
@@ -127,7 +128,7 @@ public class AbilityWizardController {
 
     // Golpe de bastón
     @GetMapping("/staffHit")
-    private String staffHit(HttpSession session) {
+    private String staffHit(HttpSession session) throws EnemyNotFoundException {
         // SI ya ha sido atacado con golpe de bastón, realiza más daño.
         if (cacheManager.hasAlreadyAttackedWithStaff(session))
             cacheManager.addAttack(session, 1);

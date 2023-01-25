@@ -7,6 +7,7 @@ import org.springframework.samples.nt4h.card.ability.deck.DeckService;
 import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.message.CacheManager;
 import org.springframework.samples.nt4h.message.Message;
+import org.springframework.samples.nt4h.message.exceptions.EnemyNotFoundException;
 import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.player.PlayerService;
 import org.springframework.samples.nt4h.turn.Turn;
@@ -134,7 +135,7 @@ public class AbilityProductController {
 
     // Capa élfica
     @GetMapping("/elfCloak")
-    private String elfCloak(HttpSession session) {
+    private String elfCloak(HttpSession session) throws EnemyNotFoundException {
         Player currentPlayer = getCurrentPlayer();
         Player loggedPlayer = getLoggedPlayer();
         if (currentPlayer != loggedPlayer)

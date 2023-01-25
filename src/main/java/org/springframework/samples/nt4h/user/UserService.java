@@ -49,7 +49,7 @@ public class UserService {
         if (user.getTier()== null) user.setTier(Tier.IRON);
         if (user.getAuthority()== null) user.setAuthority("USER");
         if (user.getIsConnected()== null) user.setIsConnected(true);
-        if (user.getStatistic() == null) user.setStatistic(Statistic.createStatistic());
+        if (user.getStatistic() == null) user.setStatistic(new Statistic());
         userRepository.save(user);
     }
 

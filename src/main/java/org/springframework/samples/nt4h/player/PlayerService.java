@@ -69,21 +69,15 @@ public class PlayerService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void inflictWounds(Player player, int i) throws PlayerIsDeadException, AllDeadException {
+    public void inflictWounds(Player player, int i) throws PlayerIsDeadException {
         player.setWounds(player.getWounds() + i);
         advise.getOneWound();
         if (player.getHealth() <= 0) {
             advise.playerIsDead();
             player.setAlive(false);
             savePlayer(player);
-            Game game = player.getGame();
-            Optional<Player> nextPlayer = game.getNextPlayer();
-            if (nextPlayer.isPresent())
-                throw new PlayerIsDeadException();
-            else
-                throw new AllDeadException();
+            throw new PlayerIsDeadException();
         }
-
         savePlayer(player);
 
     }

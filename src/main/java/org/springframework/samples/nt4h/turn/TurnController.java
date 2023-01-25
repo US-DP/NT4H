@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * Caso inicial:
+ * - El usuario debe de estar logueado,
+ * - El usuario debe de haberse unido a una partida.
+ * - El usuario debe de tener un jugador.
+ */
 @Controller
 @RequestMapping("/turns")
 public class TurnController {

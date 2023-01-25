@@ -7,15 +7,21 @@ import org.springframework.samples.nt4h.model.BaseEntity;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter
 @Setter
 @Entity
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
 public class EnemyInGame extends BaseEntity {
+
+    public EnemyInGame(Enemy enemy) {
+        this.actualHealth = enemy.getHealth();
+        List<String> nighLordsNames = List.of("Gurdrug", "Roghkiller", "Shriekknifer");
+        this.isNightLord = nighLordsNames.contains(enemy.getName());
+        this.enemy = enemy;
+    }
     @NotNull
     @Max(value = 10)
     private Integer actualHealth;
@@ -25,10 +31,6 @@ public class EnemyInGame extends BaseEntity {
 
     @ManyToOne
     private Enemy enemy;
-
-    public static EnemyInGame createEnemy(Boolean isNightLord, Enemy enemy) {
-        return EnemyInGame.builder().enemy(enemy).actualHealth(enemy.getHealth()).isNightLord(isNightLord).build();
-    }
 
     public void onDeleteSetNull() {
         enemy = null;

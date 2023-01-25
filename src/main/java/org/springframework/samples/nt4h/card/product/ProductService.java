@@ -44,11 +44,8 @@ public class ProductService {
         if (Objects.requireNonNull(selectedProduct.getStateProduct()) == StateProduct.IN_SALE) {
             if (player.getStatistic().getGold() < selectedProduct.getProduct().getPrice())
                 throw new NoMoneyException();
-            AbilityInGame abilityInGame = AbilityInGame.builder().timesUsed(0).attack(productInGame.getProduct().getAttack()).isProduct(true)
-                .productInGame(productInGame).build();
+            AbilityInGame abilityInGame = new AbilityInGame(productInGame, player);
             player.getDeck().getInDeck().add(abilityInGame);
-            productInGame.setStateProduct(StateProduct.PLAYER);
-            productInGame.setPlayer(player);
             saveProductInGame(productInGame);
             player.getStatistic().setGold(player.getStatistic().getGold() - selectedProduct.getProduct().getPrice());
             playerService.savePlayer(player);
@@ -91,11 +88,7 @@ public class ProductService {
         List<Product> shuffledProducts = getAllProducts();
         Collections.shuffle(shuffledProducts);
         shuffledProducts.forEach(
-            product -> IntStream.range(0, product.getQuantity()).forEach(i -> {
-                    ProductInGame productInGame = ProductInGame.builder().product(product).game(game).stateProduct(StateProduct.IN_SALE).build();
-                    productInGame.setName(product.getName());
-                    saveProductInGame(productInGame);
-                }
-            ));
+            product -> IntStream.range(0, product.getQuantity())
+                    .forEach(i -> saveProductInGame(new ProductInGame(product, game))));
     }
 }

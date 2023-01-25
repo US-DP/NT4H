@@ -32,6 +32,28 @@ import java.util.List;
 @AllArgsConstructor
 public class Player extends NamedEntity implements Jsonable {
 
+    public Player(User user, Game game, Boolean host) throws FullGameException {
+        birthDate = user.getBirthDate();
+        this.host = host;
+        this.game = game;
+        alive = true;
+        sequence = -1;
+        nextPhase = Phase.START;
+        ready = false;
+        statistic = new Statistic();
+        wounds = 0;
+        hasEvasion = true;
+        turns = Lists.newArrayList();
+        deck = new Deck();
+        heroes = Lists.newArrayList();
+        this.setName(user.getUsername());
+        user.setPlayer(this);
+        user.setGame(game);
+        this.game = game;
+        game.addPlayer(this);
+
+    }
+
     private Boolean hasEvasion;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -64,34 +86,6 @@ public class Player extends NamedEntity implements Jsonable {
     @OneToOne(cascade = CascadeType.ALL)
     private Deck deck;
 
-    public static Player createPlayer(User user, Game game, Boolean host) throws FullGameException {
-        Player player = Player.builder()
-                .birthDate(user.getBirthDate())
-                .host(host)
-                .game(game)
-                .alive(true)
-                .build();
-        player.defaultPlayer();
-        player.setName(user.getUsername());
-        user.setPlayer(player);
-        user.setGame(game);
-        player.setGame(game);
-        game.addPlayer(player);
-        return player;
-    }
-
-    public void defaultPlayer() {
-        sequence = -1;
-        nextPhase = Phase.START;
-        ready = false;
-        statistic = Statistic.createStatistic();
-        wounds = 0;
-        hasEvasion = true;
-        turns = Lists.newArrayList();
-        deck = Deck.createEmptyDeck();
-        heroes = Lists.newArrayList();
-    }
-
     public Turn getTurn(Phase phase) {
         return this.turns.stream()
             .filter(turn -> turn.getPhase().equals(phase))
@@ -111,7 +105,6 @@ public class Player extends NamedEntity implements Jsonable {
     }
 
     public void onDeleteSetNull() {
-     //   game.setPlayers(game.getPlayers().stream().filter(player -> !player.equals(this)).collect(Collectors.toList()));
         deck.onDeleteSetNull();
         game = null;
     }

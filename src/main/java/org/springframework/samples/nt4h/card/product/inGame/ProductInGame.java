@@ -15,10 +15,14 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Table(name = "products_in_game")
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
 public class ProductInGame extends NamedEntity {
+
+    public ProductInGame(Product product,Game game) {
+        this.product = product;
+        this.stateProduct = StateProduct.IN_SALE;
+        this.game = game;
+        setName(product.getName());
+    }
 
     @NotNull
     @Enumerated(EnumType.STRING)

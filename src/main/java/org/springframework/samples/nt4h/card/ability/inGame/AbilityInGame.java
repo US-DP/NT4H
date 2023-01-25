@@ -3,6 +3,7 @@ package org.springframework.samples.nt4h.card.ability.inGame;
 import lombok.*;
 import org.springframework.samples.nt4h.card.ability.Ability;
 import org.springframework.samples.nt4h.card.ability.AbilityCardType;
+import org.springframework.samples.nt4h.card.product.StateProduct;
 import org.springframework.samples.nt4h.card.product.inGame.ProductInGame;
 import org.springframework.samples.nt4h.model.BaseEntity;
 import org.springframework.samples.nt4h.player.Player;
@@ -20,8 +21,21 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class AbilityInGame extends BaseEntity {
 
-    @Min(0)
-    private Integer timesUsed;
+    public AbilityInGame(Ability ability, Player player) {
+        this.attack = ability.getAttack();
+        this.isProduct = false;
+        this.ability = ability;
+        this.player = player;
+    }
+
+    public AbilityInGame(ProductInGame productInGame, Player player) {
+        productInGame.setStateProduct(StateProduct.PLAYER);
+        productInGame.setPlayer(player);
+        this.attack = productInGame.getProduct().getAttack();
+        this.isProduct = true;
+        this.productInGame = productInGame;
+        this.player = player;
+    }
 
     @Min(0)
     private Integer attack;
@@ -40,16 +54,6 @@ public class AbilityInGame extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private AbilityCardType abilityCardType;
-
-    public static AbilityInGame fromAbility(Ability ability, Player player) {
-        return AbilityInGame.builder()
-                .timesUsed(0)
-                .attack(ability.getAttack())
-                .isProduct(false)
-                .ability(ability)
-                .player(player)
-                .build();
-    }
 
     public void onDeleteSetNull() {
         ability = null;

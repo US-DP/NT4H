@@ -5,6 +5,7 @@ import org.springframework.samples.nt4h.card.ability.deck.Deck;
 import org.springframework.samples.nt4h.card.ability.deck.DeckService;
 import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.message.CacheManager;
+import org.springframework.samples.nt4h.message.exceptions.EnemyNotFoundException;
 import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.player.exceptions.AllDeadException;
 import org.springframework.samples.nt4h.player.exceptions.PlayerIsDeadException;
@@ -94,13 +95,11 @@ public class AbilityKnightController {
 
     // Escudo.
     @GetMapping("/shield")
-    private String shield(HttpSession session) {
+    private String shield(HttpSession session) throws EnemyNotFoundException {
         // El enemigo seleccionado no podrá hacer daño.
         cacheManager.addPreventDamageFromEnemies(session);
-        System.out.println("Escudo" + cacheManager.getPreventDamageFromEnemies(session));
         // Termina el turno.
         cacheManager.setNextUrl(session, PAGE_END_ATTACK);
-        System.out.println("Escudo" + cacheManager.getNextUrl(session));
         return PAGE_MAKE_DAMAGE;
     }
 

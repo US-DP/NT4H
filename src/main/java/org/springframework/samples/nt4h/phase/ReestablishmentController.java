@@ -1,20 +1,20 @@
 package org.springframework.samples.nt4h.phase;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.nt4h.card.ability.inGame.AbilityInGame;
 import org.springframework.samples.nt4h.card.ability.deck.DeckService;
+import org.springframework.samples.nt4h.card.ability.inGame.AbilityInGame;
 import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
 import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.game.GameService;
 import org.springframework.samples.nt4h.message.Advise;
 import org.springframework.samples.nt4h.message.Message;
+import org.springframework.samples.nt4h.phase.exceptions.NoCurrentPlayer;
+import org.springframework.samples.nt4h.phase.exceptions.TooManyAbilitiesException;
 import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.player.PlayerService;
 import org.springframework.samples.nt4h.player.exceptions.AllDeadException;
 import org.springframework.samples.nt4h.player.exceptions.PlayerIsDeadException;
 import org.springframework.samples.nt4h.statistic.Statistic;
-import org.springframework.samples.nt4h.phase.exceptions.NoCurrentPlayer;
-import org.springframework.samples.nt4h.phase.exceptions.TooManyAbilitiesException;
 import org.springframework.samples.nt4h.turn.Turn;
 import org.springframework.samples.nt4h.turn.TurnService;
 import org.springframework.samples.nt4h.user.User;
@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/reestablishment")
@@ -65,7 +64,7 @@ public class ReestablishmentController {
     @ModelAttribute("loggedPlayer")
     public Player getLoggedPlayer() {
         User loggedUser = getLoggedUser();
-        return loggedUser.getPlayer() != null ? loggedUser.getPlayer() : Player.builder().statistic(Statistic.createStatistic()).build();
+        return loggedUser.getPlayer() != null ? loggedUser.getPlayer() : Player.builder().statistic(new Statistic()).build();
     }
 
     @ModelAttribute("currentPlayer")
@@ -93,12 +92,14 @@ public class ReestablishmentController {
         Player currentPlayer = getCurrentPlayer();
         advise.keepUrl(session, request);
         if ((getLoggedPlayer() == currentPlayer) && !hasAddedEnemies) {
+            // Acción de reestablecer los orcos.
             List<EnemyInGame> enemiesInBattle = game.getActualOrcs();
             gameService.restoreEnemyLife(enemiesInBattle);
             List<EnemyInGame> added = gameService.addNewEnemiesToBattle(game);
             advise.addEnemies(added);
             hasAddedEnemies = true;
             playerService.savePlayer(currentPlayer);
+            //
         }
         return VIEW_REESTABLISHMENT;
     }
@@ -110,7 +111,7 @@ public class ReestablishmentController {
             throw new NoCurrentPlayer();
         AbilityInGame currentAbility = turn.getCurrentAbility();
         Turn oldTurn = turnService.getTurnsByPhaseAndPlayerId(Phase.REESTABLISHMENT, currentPlayer.getId());
-        oldTurn.addAbility(currentAbility);
+        oldTurn.getUsedAbilities().add(currentAbility);
         turnService.saveTurn(oldTurn);
         deckService.specificCardFromHandToDiscard(currentPlayer.getDeck(), currentAbility);
         advise.discardAbilityInHand(currentAbility);
@@ -124,16 +125,12 @@ public class ReestablishmentController {
         Player loggedPlayer = getLoggedPlayer();
         if (loggedPlayer == currentPlayer) {
             deckService.moveCardsFromDeckToHand(currentPlayer, currentPlayer.getDeck());
-            Optional<Player> nextPlayer = game.getNextPlayer();
-            if (nextPlayer.isPresent()) {
-                Player next = nextPlayer.get();
-                game.setCurrentPlayer(next);
-                game.setCurrentTurn(turnService.getTurnsByPhaseAndPlayerId(Phase.START, next.getId()));
-                gameService.saveGame(game);
-                advise.changePlayer(loggedPlayer, game);
-                hasAddedEnemies = false;
-            } else
-                return "turns/end";
+            Player nextPlayer = game.getNextPlayer();
+            game.setCurrentPlayer(nextPlayer);
+            game.setCurrentTurn(turnService.getTurnsByPhaseAndPlayerId(Phase.START, nextPlayer.getId()));
+            gameService.saveGame(game);
+            advise.changePlayer(loggedPlayer, game);
+            hasAddedEnemies = false;
 
         }
         return NEXT_TURN;

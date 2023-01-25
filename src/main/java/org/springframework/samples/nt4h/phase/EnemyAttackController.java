@@ -54,7 +54,7 @@ public class EnemyAttackController {
     @ModelAttribute("loggedPlayer")
     public Player getLoggedPlayer() {
         User loggedUser = getUser();
-        return loggedUser.getPlayer() != null ? loggedUser.getPlayer() : Player.builder().statistic(Statistic.createStatistic()).build();
+        return loggedUser.getPlayer() != null ? loggedUser.getPlayer() : Player.builder().statistic(new Statistic()).build();
     }
 
     @ModelAttribute("game")
@@ -88,11 +88,13 @@ public class EnemyAttackController {
     public String getEnemyAttack(ModelMap model, HttpSession session, HttpServletRequest request) throws PlayerIsDeadException, AllDeadException {
         Game game = getGame();
         if (getCurrentPlayer() == getLoggedPlayer() && damage == null) {
+            // Cálculo del daño.
             int defendedDmg = cacheManager.getDefend(session);
             Predicate<EnemyInGame> hasPreventedDamage = enemy -> !(cacheManager.hasPreventDamageFromEnemies(session, enemy));
             List<EnemyInGame> enemiesInATrap = cacheManager.getCapturedEnemies(session);
             damage = gameService.attackEnemyToActualPlayer(game, hasPreventedDamage, defendedDmg, enemiesInATrap);
             advise.playerIsAttacked(damage);
+            //
         }
         model.put("damage", damage);
         advise.keepUrl(session, request);

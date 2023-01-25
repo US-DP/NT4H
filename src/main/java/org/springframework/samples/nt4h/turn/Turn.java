@@ -20,10 +20,24 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
+// TODO: Replantear esta calse. No tiene sentido que tenga una lista de abilities, enemies y products
 public class Turn extends BaseEntity implements Jsonable {
+
+    public Turn(Player player, Phase phase) {
+        this.player = player;
+        this.game = player.getGame();
+        this.phase = phase;
+        usedAbilities = Lists.newArrayList();
+        usedEnemies = Lists.newArrayList();
+        usedProducts = Lists.newArrayList();
+        player.getTurns().add(this);
+    }
+
+    public Turn() {
+        usedAbilities = Lists.newArrayList();
+        usedEnemies = Lists.newArrayList();
+        usedProducts = Lists.newArrayList();
+    }
 
     @Enumerated
     private Phase phase;
@@ -51,39 +65,6 @@ public class Turn extends BaseEntity implements Jsonable {
 
     @ManyToOne(cascade = CascadeType.ALL)
     private Player player;
-
-    public void addProduct(ProductInGame product) {
-        if (usedProducts == null) {
-            usedProducts = Lists.newArrayList();
-        }
-        usedProducts.add(product);
-    }
-
-    public void addEnemy(EnemyInGame attackedEnemy) {
-        if(usedEnemies == null) {
-            usedEnemies = Lists.newArrayList(attackedEnemy);
-        } else {
-            usedEnemies.add(attackedEnemy);
-        }
-    }
-
-
-    public void addAbility(AbilityInGame usedAbility) {
-        if(usedAbilities == null) {
-            usedAbilities = Lists.newArrayList(usedAbility);
-        } else {
-            usedAbilities.add(usedAbility);
-        }
-    }
-
-    public void OnDeleteSetNull() {
-        usedAbilities = null;
-        currentAbility = null;
-        currentEnemy = null;
-        usedEnemies = null;
-        game = null;
-        player = null;
-    }
 
     @Override
     public String toJson() {

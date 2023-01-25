@@ -15,9 +15,6 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @Table(name = "achievements")
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
 public class Achievement extends NamedEntity {
 
     @NotNull

@@ -10,6 +10,7 @@ import org.springframework.samples.nt4h.game.exceptions.FullGameException;
 import org.springframework.samples.nt4h.game.exceptions.HeroAlreadyChosenException;
 import org.springframework.samples.nt4h.model.NamedEntity;
 import org.springframework.samples.nt4h.player.Player;
+import org.springframework.samples.nt4h.player.exceptions.AllDeadException;
 import org.springframework.samples.nt4h.player.exceptions.RoleAlreadyChosenException;
 import org.springframework.samples.nt4h.statistic.Statistic;
 import org.springframework.samples.nt4h.turn.Turn;
@@ -28,10 +29,23 @@ import java.util.Optional;
 @Setter
 @Entity
 @Table(name = "games")
-@Builder(toBuilder = true)
 @NoArgsConstructor
-@AllArgsConstructor
 public class Game extends NamedEntity implements Jsonable {
+
+    public Game(String name, Mode mode, int maxPlayers, String password) {
+        this.setName(name);
+        this.mode = mode;
+        this.maxPlayers = maxPlayers;
+        this.password = password;
+        this.accessibility = password.isEmpty() ? Accessibility.PUBLIC : Accessibility.PRIVATE;
+        alivePlayersInTurnOrder = Lists.newArrayList();
+        actualOrcs = Lists.newArrayList();
+        allOrcsInGame = Lists.newArrayList();
+        passiveOrcs = Lists.newArrayList();
+        players = Lists.newArrayList();
+        startDate = LocalDateTime.now();
+        spectators = Lists.newArrayList();
+    }
 
     private LocalDateTime startDate;
 
@@ -99,38 +113,18 @@ public class Game extends NamedEntity implements Jsonable {
             .anyMatch(h -> h == hero);
     }
 
-    public static Game createGame(String name, Mode mode, int maxPlayers, String password) {
-        Game game = Game.builder()
-            .accessibility(password.isEmpty() ? Accessibility.PUBLIC : Accessibility.PRIVATE)
-            .mode(mode)
-            .maxPlayers(maxPlayers)
-            .password(password)
-            .players(Lists.newArrayList())
-            .build();
-        game.defaultGame();
-        game.setName(name);
-        return game;
-    }
-
-    public void defaultGame() {
-        alivePlayersInTurnOrder = Lists.newArrayList();
-        actualOrcs = Lists.newArrayList();
-        allOrcsInGame = Lists.newArrayList();
-        passiveOrcs = Lists.newArrayList();
-        players = Lists.newArrayList();
-        startDate = LocalDateTime.now();
-        spectators = Lists.newArrayList();
-    }
-
     public void onDeleteSetNull() {
         players.forEach(Player::onDeleteSetNull);
         allOrcsInGame.forEach(EnemyInGame::onDeleteSetNull);
     }
 
-    public Optional<Player> getNextPlayer() {
+    public Player getNextPlayer() throws AllDeadException {
         int totalPlayers = players.size();
         Integer nextSequence = (currentPlayer.getSequence()+1) % totalPlayers;
-        return players.stream().filter(p -> Objects.equals(p.getSequence(), nextSequence)).filter(Player::getAlive).findFirst();
+        Optional<Player> possibleNextPlayer = players.stream().filter(p -> Objects.equals(p.getSequence(), nextSequence)).filter(Player::getAlive).findFirst();
+        if (possibleNextPlayer.isPresent())
+            return possibleNextPlayer.get();
+        throw new AllDeadException();
     }
 
     @Override

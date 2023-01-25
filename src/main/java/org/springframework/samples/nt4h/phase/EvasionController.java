@@ -67,7 +67,7 @@ public class EvasionController {
     @ModelAttribute("loggedPlayer")
     public Player getLoggedPlayer() {
         User loggedUser = getLoggedUser();
-        return loggedUser.getPlayer() != null ? loggedUser.getPlayer() : Player.builder().statistic(Statistic.createStatistic()).build();
+        return loggedUser.getPlayer() != null ? loggedUser.getPlayer() : Player.builder().statistic(new Statistic()).build();
     }
 
 
@@ -95,15 +95,17 @@ public class EvasionController {
         Player loggedPlayer = getLoggedPlayer();
         if (loggedPlayer != player)
             throw new NoCurrentPlayer();
+        // Descartar una carta.
         AbilityInGame currentAbility = turn.getCurrentAbility();
         if (currentAbility == null)
             throw new WithOutAbilityException();
         Turn oldTurn = turnService.getTurnsByPhaseAndPlayerId(Phase.EVADE, player.getId());
-        oldTurn.addAbility(currentAbility);
+        oldTurn.getUsedAbilities().add(currentAbility);
         turnService.saveTurn(oldTurn);
         player.getDeck().discardCardOnHand(currentAbility);
         playerService.savePlayer(player);
         advise.discardCard(currentAbility);
+        //
         return PAGE_EVASION;
     }
 

@@ -13,10 +13,13 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Builder(toBuilder = true)
-@NoArgsConstructor
-@AllArgsConstructor
 public class Deck extends BaseEntity {
+
+    public Deck() {
+        inHand = Lists.newArrayList();
+        inDeck = Lists.newArrayList();
+        inDiscard = Lists.newArrayList();
+    }
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<AbilityInGame> inHand;
@@ -24,10 +27,6 @@ public class Deck extends BaseEntity {
     private List<AbilityInGame> inDeck;
     @OneToMany(cascade = CascadeType.ALL)
     private List<AbilityInGame> inDiscard;
-
-    public static Deck createEmptyDeck() {
-        return Deck.builder().inDeck(Lists.newArrayList()).inHand(Lists.newArrayList()).inDiscard(Lists.newArrayList()).build();
-    }
 
     public void onDeleteSetNull() {
         inHand.forEach(AbilityInGame::onDeleteSetNull);
