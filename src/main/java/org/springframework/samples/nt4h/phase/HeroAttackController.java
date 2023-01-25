@@ -35,17 +35,13 @@ public class HeroAttackController {
     private final static String PAGE_ABILITY = "redirect:/abilities";
 
     private final UserService userService;
-    private final TurnService turnService;
-    private final GameService gameService;
     private final Advise advise;
     private final CacheManager cacheManager;
     private final PhaseService phaseService;
 
     @Autowired
-    public HeroAttackController(UserService userService, TurnService turnService, GameService gameService, Advise advise, CacheManager cacheManager, PhaseService phaseService) {
+    public HeroAttackController(UserService userService, Advise advise, CacheManager cacheManager, PhaseService phaseService) {
         this.userService = userService;
-        this.turnService = turnService;
-        this.gameService = gameService;
         this.advise = advise;
         this.cacheManager = cacheManager;
         this.phaseService = phaseService;
@@ -101,8 +97,6 @@ public class HeroAttackController {
 
     @GetMapping("/makeDamage")
     public String attackEnemy(HttpSession session) throws NoCurrentPlayer {
-        Player player = getPlayer();
-        Game game = getGame();
         phaseService.isCurrentPlayer();
         phaseService.attackHero(session);
         return cacheManager.getNextUrl(session).orElse(PAGE_HERO_ATTACK);
@@ -110,13 +104,9 @@ public class HeroAttackController {
 
     @GetMapping("/next")
     public String next() {
-        Player player = getPlayer();
         Game game = getGame();
-        if (player == getGame().getCurrentPlayer()) {
-            game.setCurrentTurn(turnService.getTurnsByPhaseAndPlayerId(((game.getActualOrcs().isEmpty()) && (game.getAllOrcsInGame().isEmpty())) ? Phase.END: Phase.ENEMY_ATTACK, player.getId()));
-            gameService.saveGame(game);
-            advise.passPhase(game);
-        }
+        Phase nextPhase = (game.getActualOrcs().isEmpty() && game.getAllOrcsInGame().isEmpty()) ? Phase.END : Phase.ENEMY_ATTACK;
+        phaseService.doIfCurrentPlayer(() -> phaseService.setPhaseInGame(nextPhase));
         return NEXT_TURN;
     }
 

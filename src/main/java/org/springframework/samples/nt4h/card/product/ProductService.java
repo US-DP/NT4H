@@ -8,6 +8,7 @@ import org.springframework.samples.nt4h.card.product.exceptions.NotInSaleExcepti
 import org.springframework.samples.nt4h.card.product.inGame.ProductInGame;
 import org.springframework.samples.nt4h.card.product.inGame.ProductInGameRepository;
 import org.springframework.samples.nt4h.game.Game;
+import org.springframework.samples.nt4h.phase.exceptions.WithOutProductException;
 import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.player.PlayerService;
 import org.springframework.samples.nt4h.phase.exceptions.CapacitiesRequiredException;
@@ -32,7 +33,9 @@ public class ProductService {
     private static final Integer MAX_PRODUCTS_ON_SALE = 5;
 
     @Transactional(rollbackFor = {NoMoneyException.class, NotInSaleException.class})
-    public void buyProduct(Player player, ProductInGame productInGame) throws NoMoneyException, NotInSaleException, CapacitiesRequiredException {
+    public void buyProduct(Player player, ProductInGame productInGame) throws NoMoneyException, NotInSaleException, CapacitiesRequiredException, WithOutProductException {
+        if (productInGame == null)
+            throw new WithOutProductException();
         ProductInGame selectedProduct = getProductInGameById(productInGame.getId());
         List<StateCapacity> stateCapacities = player.getHeroes().stream()
             .flatMap(hero -> hero.getCapacities().stream().map(Capacity::getStateCapacity))

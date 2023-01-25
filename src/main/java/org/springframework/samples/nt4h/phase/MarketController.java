@@ -41,14 +41,16 @@ public class MarketController {
     private final TurnService turnService;
     private final GameService gameService;
     private final Advise advise;
+    private final PhaseService phaseService;
 
     @Autowired
-    public MarketController(UserService userService, ProductService productService, TurnService turnService, GameService gameService, Advise advise) {
+    public MarketController(UserService userService, ProductService productService, TurnService turnService, GameService gameService, Advise advise, PhaseService phaseService) {
         this.userService = userService;
         this.productService = productService;
         this.turnService = turnService;
         this.gameService = gameService;
         this.advise = advise;
+        this.phaseService = phaseService;
     }
 
     @ModelAttribute("productsOnSale")
@@ -97,30 +99,17 @@ public class MarketController {
     @PostMapping
     public String buyProduct(Turn turn) throws NoCurrentPlayer, NoMoneyException, NotInSaleException, WithOutProductException, CapacitiesRequiredException {
         Player player = getCurrentPlayer();
-        Player loggedPlayer = getLoggedPlayer();
         ProductInGame productInGame = turn.getCurrentProduct();
-        if (loggedPlayer != player)
-            throw new NoCurrentPlayer();
-        if (productInGame == null)
-            throw new WithOutProductException();
+        phaseService.isCurrentPlayer();
         productService.buyProduct(player, productInGame);
-        Turn oldTurn = turnService.getTurnsByPhaseAndPlayerId(Phase.MARKET, player.getId());
-        oldTurn.getUsedProducts().add(productInGame);
-        turnService.saveTurn(oldTurn);
-        advise.buyProduct(productInGame);
+        turnService.update(turn, player, Phase.MARKET);
+        // advise.buyProduct(productInGame);
         return PAGE_MARKET;
     }
 
     @GetMapping("/next")
     public String next() {
-        Player currentPlayer = getCurrentPlayer();
-        Player loggedPlayer = getLoggedPlayer();
-        Game game = getGame();
-        if (loggedPlayer == currentPlayer) {
-            game.setCurrentTurn(turnService.getTurnsByPhaseAndPlayerId(Phase.REESTABLISHMENT, currentPlayer.getId()));
-            gameService.saveGame(game);
-            advise.passPhase(game);
-        }
+        phaseService.setPhaseInGame(Phase.REESTABLISHMENT);
         return NEXT_TURN;
     }
 }

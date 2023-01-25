@@ -76,4 +76,8 @@ public class TurnService {
         }
         saveTurn(oldTurn);
     }
+
+    public void passTurn() {
+
+    }
 }

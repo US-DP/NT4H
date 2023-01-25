@@ -1,7 +1,6 @@
 package org.springframework.samples.nt4h.phase;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
 import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.game.GameService;
 import org.springframework.samples.nt4h.message.Advise;
@@ -23,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.function.Predicate;
 
 @Controller
 @RequestMapping("/enemyAttack")
@@ -38,6 +35,7 @@ public class EnemyAttackController {
     private final static String VIEW_ATTACK = "turns/attackPhase";
     private final static String NEXT_TURN = "redirect:/turns";
     private final Advise advise;
+    private final PhaseService phaseService;
 
     private Integer damage;
 
@@ -75,27 +73,20 @@ public class EnemyAttackController {
 
 
     @Autowired
-    public EnemyAttackController(UserService userService, TurnService turnService, GameService gameService, CacheManager cacheManager, Advise advise) {
+    public EnemyAttackController(UserService userService, TurnService turnService, GameService gameService, CacheManager cacheManager, Advise advise, PhaseService phaseService) {
         this.userService = userService;
         this.turnService = turnService;
         this.gameService = gameService;
         this.cacheManager = cacheManager;
         this.advise = advise;
+        this.phaseService = phaseService;
         this.damage = null;
     }
 
     @GetMapping
     public String getEnemyAttack(ModelMap model, HttpSession session, HttpServletRequest request) throws PlayerIsDeadException, AllDeadException {
-        Game game = getGame();
-        if (getCurrentPlayer() == getLoggedPlayer() && damage == null) {
-            // Cálculo del daño.
-            int defendedDmg = cacheManager.getDefend(session);
-            Predicate<EnemyInGame> hasPreventedDamage = enemy -> !(cacheManager.hasPreventDamageFromEnemies(session, enemy));
-            List<EnemyInGame> enemiesInATrap = cacheManager.getCapturedEnemies(session);
-            damage = gameService.attackEnemyToActualPlayer(game, hasPreventedDamage, defendedDmg, enemiesInATrap);
-            advise.playerIsAttacked(damage);
-            //
-        }
+        if (getCurrentPlayer() == getLoggedPlayer() && damage == null)
+            damage = phaseService.attackEnemy(session);
         model.put("damage", damage);
         advise.keepUrl(session, request);
         return VIEW_ATTACK;
@@ -105,14 +96,12 @@ public class EnemyAttackController {
     public String nextTurn(HttpSession session) {
         cacheManager.deleteEndAttackEnemy(session);
         cacheManager.deleteEndAttackHero(session);
-        Player player = getLoggedPlayer();
-        Game game = getGame();
-        if(player == game.getCurrentPlayer()) {
-            damage = null;
-            game.setCurrentTurn(turnService.getTurnsByPhaseAndPlayerId(Phase.MARKET, player.getId()));
-            gameService.saveGame(game);
-            advise.passPhase(game);
-        }
+        phaseService.doIfCurrentPlayer(
+                () -> {
+                    damage = null;
+                    phaseService.setPhaseInGame(Phase.MARKET);
+                }
+        );
         return NEXT_TURN;
     }
 }

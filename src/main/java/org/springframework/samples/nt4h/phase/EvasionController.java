@@ -101,12 +101,10 @@ public class EvasionController {
 
     @GetMapping("/next")
     public String nextTurn() throws WhenEvasionDiscardAtLeast2Exception {
-        Player player = getCurrentPlayer();
+        Player currentPlayer = getCurrentPlayer();
         Player loggedPlayer = getLoggedPlayer();
-        Game game = getGame();
-        if (player == loggedPlayer) {
-
-        }
+        if (currentPlayer == loggedPlayer)
+            phaseService.discardAtLeastTwoCards();
         return NEXT_TURN;
     }
 

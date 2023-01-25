@@ -15,6 +15,8 @@ import org.springframework.samples.nt4h.phase.exceptions.WithOutAbilityException
 import org.springframework.samples.nt4h.phase.exceptions.WithOutEnemyException;
 import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.player.PlayerService;
+import org.springframework.samples.nt4h.player.exceptions.AllDeadException;
+import org.springframework.samples.nt4h.player.exceptions.PlayerIsDeadException;
 import org.springframework.samples.nt4h.statistic.Statistic;
 import org.springframework.samples.nt4h.statistic.StatisticService;
 import org.springframework.samples.nt4h.turn.Turn;
@@ -26,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,10 +65,33 @@ public class PhaseService {
         return loggedUser.getPlayer() != null ? loggedUser.getPlayer() : Player.builder().statistic(new Statistic()).build();
     }
 
+    public void doIfCurrentPlayer(Runnable runnable) {
+        if (getGame().getCurrentPlayer() == getLoggedPlayer())
+            runnable.run();
+    }
+
     public void isCurrentPlayer() throws NoCurrentPlayer {
         if (getGame().getCurrentPlayer() != getLoggedPlayer()) {
             throw new NoCurrentPlayer();
         }
+    }
+
+    public void setPhaseInGame(Phase phase) {
+        Game game = getGame();
+        Player currentPlayer = getCurrentPlayer();
+        game.setCurrentTurn(currentPlayer.getTurn(phase));
+        gameService.saveGame(game);
+        // advise.passPhase(game);
+    }
+
+    public void passTurn() throws AllDeadException {
+        Game game = getGame();
+        Player nextPlayer = game.getNextPlayer();
+        game.setCurrentPlayer(nextPlayer);
+        game.setCurrentTurn(nextPlayer.getTurn(Phase.START));
+        gameService.saveGame(game);
+
+        // advise.passTurn(game);
     }
 
     // --------------------
@@ -146,12 +172,12 @@ public class PhaseService {
     }
 
     public void discardAtLeastTwoCards() throws WhenEvasionDiscardAtLeast2Exception {
-        Player player = getCurrentPlayer();
+        Player currentPlayer = getCurrentPlayer();
         Game game = getGame();
-        Turn turn = turnService.getTurnsByPhaseAndPlayerId(Phase.EVADE, player.getId());
+        Turn turn = currentPlayer.getTurn(Phase.EVADE);
         if (turn.getUsedAbilities().size() < 2)
             throw new WhenEvasionDiscardAtLeast2Exception();
-        game.setCurrentTurn(turnService.getTurnsByPhaseAndPlayerId(Phase.MARKET, player.getId()));
+        setPhaseInGame(Phase.MARKET);
         gameService.saveGame(game);
         // advise.passPhase(game);
     }
@@ -159,4 +185,13 @@ public class PhaseService {
     // --------------------
     // Fase de ataque enemigo.
     // --------------------
+    public Integer attackEnemy(HttpSession session) throws PlayerIsDeadException, AllDeadException {
+        int defendedDmg = cacheManager.getDefend(session);
+        Game game = getGame();
+        Predicate<EnemyInGame> hasPreventedDamage = enemy -> !(cacheManager.hasPreventDamageFromEnemies(session, enemy));
+        List<EnemyInGame> enemiesInATrap = cacheManager.getCapturedEnemies(session);
+        Integer damage = gameService.attackEnemyToActualPlayer(game, hasPreventedDamage, defendedDmg, enemiesInATrap);
+        // advise.playerIsAttacked(damage);
+        return damage;
+    }
 }

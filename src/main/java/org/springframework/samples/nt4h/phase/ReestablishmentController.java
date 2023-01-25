@@ -39,6 +39,7 @@ public class ReestablishmentController {
     private final GameService gameService;
     private final TurnService turnService;
     private final Advise advise;
+    private final PhaseService phaseService;
 
     private final static String VIEW_REESTABLISHMENT = "turns/reestablishmentPhase";
     private final static String PAGE_REESTABLISHMENT = "redirect:/reestablishment";
@@ -47,13 +48,14 @@ public class ReestablishmentController {
 
 
     @Autowired
-    public ReestablishmentController(UserService userService, PlayerService playerService, DeckService deckService, GameService gameService, TurnService turnService, Advise advise) {
+    public ReestablishmentController(UserService userService, PlayerService playerService, DeckService deckService, GameService gameService, TurnService turnService, Advise advise, PhaseService phaseService) {
         this.playerService = playerService;
         this.userService = userService;
         this.deckService = deckService;
         this.gameService = gameService;
         this.turnService = turnService;
         this.advise = advise;
+        this.phaseService = phaseService;
     }
 
     @ModelAttribute("loggedUser")
@@ -125,13 +127,9 @@ public class ReestablishmentController {
         Player loggedPlayer = getLoggedPlayer();
         if (loggedPlayer == currentPlayer) {
             deckService.moveCardsFromDeckToHand(currentPlayer, currentPlayer.getDeck());
-            Player nextPlayer = game.getNextPlayer();
-            game.setCurrentPlayer(nextPlayer);
-            game.setCurrentTurn(turnService.getTurnsByPhaseAndPlayerId(Phase.START, nextPlayer.getId()));
-            gameService.saveGame(game);
+            phaseService.passTurn();
             advise.changePlayer(loggedPlayer, game);
             hasAddedEnemies = false;
-
         }
         return NEXT_TURN;
     }
