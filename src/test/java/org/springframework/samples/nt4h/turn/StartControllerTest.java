@@ -10,27 +10,20 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.game.Mode;
 import org.springframework.samples.nt4h.game.exceptions.FullGameException;
 import org.springframework.samples.nt4h.message.Advise;
 import org.springframework.samples.nt4h.message.CacheManager;
-import org.springframework.samples.nt4h.message.MessageRepository;
-import org.springframework.samples.nt4h.message.MessageService;
-import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.player.Tier;
-import org.springframework.samples.nt4h.statistic.Statistic;
-import org.springframework.samples.nt4h.turn.exceptions.NoCurrentPlayer;
+import org.springframework.samples.nt4h.turn.exceptions.NoCurrentPlayerException;
 import org.springframework.samples.nt4h.turn.exceptions.WithOutPhaseException;
-import org.springframework.samples.nt4h.user.User;
-import org.springframework.samples.nt4h.user.UserRepository;
+import org.springframework.samples.nt4h.turn.start.StartController;
 import org.springframework.samples.nt4h.user.UserService;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -108,7 +101,7 @@ class StartControllerTest {
     }
 
     @Test
-    void testSelectEvasion() throws NoCurrentPlayer, WithOutPhaseException {
+    void testSelectEvasion() throws NoCurrentPlayerException, WithOutPhaseException {
         when(userService.getLoggedUser()).thenReturn(user);
         assertEquals("redirect:/turns",startController.selectEvasion(turn, new MockHttpSession()));
     }

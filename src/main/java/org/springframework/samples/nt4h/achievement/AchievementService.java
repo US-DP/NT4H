@@ -10,7 +10,11 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class AchievementService {
+
+    // Repositories ------------------------------------------------------------
     private final AchievementRepository achievementRepository;
+
+    // Methods -----------------------------------------------------------------
 
     @Transactional(readOnly = true, rollbackFor = NotFoundException.class)
     public Achievement getAchievementById(int id) {

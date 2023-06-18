@@ -1,12 +1,8 @@
 package org.springframework.samples.nt4h.card.product;
 
 import lombok.AllArgsConstructor;
-import org.springframework.samples.nt4h.capacity.Capacity;
 import org.springframework.samples.nt4h.capacity.StateCapacity;
-import org.springframework.samples.nt4h.card.ability.AbilityInGame;
 import org.springframework.samples.nt4h.card.product.exceptions.NotInSaleException;
-import org.springframework.samples.nt4h.game.Game;
-import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.player.PlayerService;
 import org.springframework.samples.nt4h.turn.exceptions.CapacitiesRequiredException;
 import org.springframework.samples.nt4h.turn.exceptions.NoMoneyException;
@@ -15,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;

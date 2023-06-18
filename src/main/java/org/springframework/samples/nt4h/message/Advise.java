@@ -1,14 +1,6 @@
 package org.springframework.samples.nt4h.message;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.nt4h.achievement.Achievement;
-import org.springframework.samples.nt4h.card.ability.AbilityInGame;
-import org.springframework.samples.nt4h.card.enemy.EnemyInGame;
-import org.springframework.samples.nt4h.card.hero.HeroInGame;
-import org.springframework.samples.nt4h.card.product.ProductInGame;
-import org.springframework.samples.nt4h.game.Game;
-import org.springframework.samples.nt4h.player.Player;
-import org.springframework.samples.nt4h.user.User;
 import org.springframework.samples.nt4h.user.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;

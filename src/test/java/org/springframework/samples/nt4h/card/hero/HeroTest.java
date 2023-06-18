@@ -6,20 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.samples.nt4h.capacity.CapacityRepository;
-import org.springframework.samples.nt4h.card.ability.AbilityRepository;
-import org.springframework.samples.nt4h.card.hero.Hero;
-import org.springframework.samples.nt4h.card.hero.Role;
-import org.springframework.samples.nt4h.exceptions.NotFoundException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.samples.nt4h.card.hero.HeroRepository;
 
-import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -39,7 +29,7 @@ public class HeroTest {
     @BeforeEach
     public void setup() {
         hero = new Hero();
-        hero.setName("Test Hero");
+        hero.setName("Test Hero.kt");
         hero.setHealth(10);
         hero.setRole(Role.EXPLORER);
         hero.setAbilities(Lists.newArrayList());
@@ -49,7 +39,7 @@ public class HeroTest {
 
     @Test
     public void testHeroProperties() {
-        assertThat(hero.getName()).isEqualTo("Test Hero");
+        assertThat(hero.getName()).isEqualTo("Test Hero.kt");
         assertThat(hero.getHealth()).isEqualTo(10);
         assertThat(hero.getRole()).isEqualTo(Role.EXPLORER);
         assertThat(hero.getAbilities()).isEmpty();
@@ -81,9 +71,9 @@ public class HeroTest {
         hero = heroRepository.save(hero);
         assertThat(hero.getId()).isNotNull();
 
-        hero.setName("Updated Hero");
+        hero.setName("Updated Hero.kt");
         hero = heroRepository.save(hero);
-        assertThat(hero.getName()).isEqualTo("Updated Hero");
+        assertThat(hero.getName()).isEqualTo("Updated Hero.kt");
 
         heroRepository.delete(hero);
         assertThat(heroRepository.findById(hero.getId())).isEmpty();
@@ -94,6 +84,6 @@ public class HeroTest {
         heroRepository.save(hero);
         assertThat(heroRepository.findAll()).isNotEmpty();
 
-        assertThat(heroRepository.findByName("Test Hero")).isNotNull();
+        assertThat(heroRepository.findByName("Test Hero.kt")).isNotNull();
     }
 }

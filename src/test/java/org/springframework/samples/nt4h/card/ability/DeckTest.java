@@ -3,27 +3,9 @@ package org.springframework.samples.nt4h.card.ability;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.Disabled;
-
 import org.junit.jupiter.api.Test;
-import org.springframework.samples.nt4h.card.enemy.Enemy;
-import org.springframework.samples.nt4h.card.enemy.EnemyInGame;
-import org.springframework.samples.nt4h.card.hero.Role;
-import org.springframework.samples.nt4h.card.product.Product;
-import org.springframework.samples.nt4h.card.product.ProductInGame;
-import org.springframework.samples.nt4h.card.product.StateProduct;
-import org.springframework.samples.nt4h.game.Accessibility;
-import org.springframework.samples.nt4h.game.Game;
-import org.springframework.samples.nt4h.game.Mode;
-import org.springframework.samples.nt4h.player.Player;
-import org.springframework.samples.nt4h.statistic.Statistic;
-import org.springframework.samples.nt4h.turn.Phase;
-import org.springframework.samples.nt4h.turn.Turn;
 
 class DeckTest {
     @Test

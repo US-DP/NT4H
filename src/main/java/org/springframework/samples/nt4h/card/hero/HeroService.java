@@ -12,10 +12,10 @@ import java.util.List;
 public class HeroService {
     private HeroRepository heroRepository;
 
-    // Hero
+    // Hero.kt
     @Transactional(readOnly = true, rollbackFor = NotFoundException.class)
     public Hero getHeroById(Integer id) {
-        return heroRepository.findById(id).orElseThrow(() -> new NotFoundException("Hero not found"));
+        return heroRepository.findById(id).orElseThrow(() -> new NotFoundException("Hero.kt not found"));
     }
 
     @Transactional(readOnly = true)
@@ -25,7 +25,7 @@ public class HeroService {
 
     @Transactional(readOnly = true, rollbackFor = NotFoundException.class)
     public Hero getHeroByName(String name) {
-        return heroRepository.findByName(name).orElseThrow(() -> new NotFoundException("Hero not found"));
+        return heroRepository.findByName(name).orElseThrow(() -> new NotFoundException("Hero.kt not found"));
     }
 
 }

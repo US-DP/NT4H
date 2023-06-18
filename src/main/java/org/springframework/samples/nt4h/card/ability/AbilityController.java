@@ -1,18 +1,12 @@
 package org.springframework.samples.nt4h.card.ability;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.nt4h.card.enemy.EnemyInGame;
-import org.springframework.samples.nt4h.card.product.ProductInGame;
 import org.springframework.samples.nt4h.card.product.ProductService;
-import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.game.GameService;
 import org.springframework.samples.nt4h.message.CacheManager;
-import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.player.PlayerService;
 import org.springframework.samples.nt4h.turn.Phase;
-import org.springframework.samples.nt4h.turn.Turn;
 import org.springframework.samples.nt4h.turn.TurnService;
-import org.springframework.samples.nt4h.user.User;
 import org.springframework.samples.nt4h.user.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -44,26 +38,6 @@ public class AbilityController {
         this.productService = productService;
         this.turnService = turnService;
         this.cacheManager = cacheManager;
-    }
-
-    @ModelAttribute("loggedUser")
-    public User getLoggedUser() {
-        return userService.getLoggedUser();
-    }
-
-    @ModelAttribute("game")
-    public Game getGame() {
-        return getLoggedUser().getGame();
-    }
-
-    @ModelAttribute("currentPlayer")
-    public Player getCurrentPlayer() {
-        return getGame().getCurrentPlayer();
-    }
-
-    @ModelAttribute("loggedPlayer")
-    public Player getLoggedPlayer() {
-        return getLoggedUser().getPlayer();
     }
 
     @PostMapping("/loseCard")

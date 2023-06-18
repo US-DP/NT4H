@@ -9,7 +9,8 @@ public enum Role {
     WIZARD(Lists.newArrayList(16, 17, 18, 19, 20, 21, 22, 23, 24)),
     KNIGHT(Lists.newArrayList(8, 9, 10, 11, 12, 13, 14, 15)),
     EXPLORER(Lists.newArrayList(1, 2, 3, 4, 5, 6, 7)),
-    THIEF(Lists.newArrayList(25, 26, 27, 28, 29, 30, 30, 31, 32));
+    THIEF(Lists.newArrayList(25, 26, 27, 28, 29, 30, 30, 31, 32)),
+    UNDEFINED(Lists.newArrayList(0));
 
     private final List<Integer> abilities;
 

@@ -2,7 +2,6 @@ package org.springframework.samples.nt4h.player;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.samples.nt4h.user.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

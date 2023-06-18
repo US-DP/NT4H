@@ -6,11 +6,9 @@ import org.springframework.samples.nt4h.card.ability.exceptions.LessThan4Abiliti
 import org.springframework.samples.nt4h.card.hero.exceptions.MaxUsesExcededException;
 import org.springframework.samples.nt4h.card.product.exceptions.NotInSaleException;
 import org.springframework.samples.nt4h.exceptions.NotFoundException;
-import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.game.exceptions.*;
 import org.springframework.samples.nt4h.player.exceptions.RoleAlreadyChosenException;
 import org.springframework.samples.nt4h.turn.exceptions.*;
-import org.springframework.samples.nt4h.user.User;
 import org.springframework.samples.nt4h.user.UserService;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,7 +24,7 @@ import javax.servlet.http.HttpSession;
 @ControllerAdvice
 public class ExceptionHandlerConfiguration
 {
-	private BasicErrorController errorController;
+    private BasicErrorController errorController;
     // add any exceptions/validations/binding problems
 
     private final UserService userService;
@@ -43,6 +41,9 @@ public class ExceptionHandlerConfiguration
     public ExceptionHandlerConfiguration(UserService userService) {
         this.userService = userService;
     }
+
+
+
 
     @Autowired
     public ExceptionHandlerConfiguration(BasicErrorController errorController, UserService userService) {
@@ -127,7 +128,7 @@ public class ExceptionHandlerConfiguration
         return PAGE_MARKET;
     }
 
-    @ExceptionHandler(NoCurrentPlayer.class)
+    @ExceptionHandler(NoCurrentPlayerException.class)
     public String handleNoCurrentPlayer(HttpSession session, HttpServletRequest request) {
         session.setAttribute("message", "It's not your turn");
         session.setAttribute("messageType", "danger");

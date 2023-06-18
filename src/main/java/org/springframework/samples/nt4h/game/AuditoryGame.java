@@ -7,7 +7,6 @@ import org.hibernate.envers.NotAudited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.samples.nt4h.model.BaseEntity;
-import org.springframework.samples.nt4h.user.User;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;

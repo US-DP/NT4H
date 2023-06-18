@@ -1,7 +1,6 @@
 package org.springframework.samples.nt4h.message;
 
 import com.google.common.collect.Lists;
-import org.springframework.samples.nt4h.card.enemy.EnemyInGame;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -11,6 +10,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+// TODO: Eliminar y convertir en tablas.
 public class BaseCacheManager {
 
     private final static String ATTACKED_ENEMY = "attackedEnemy"; // El enemigo que ha sido seleccionado.
@@ -20,9 +20,9 @@ public class BaseCacheManager {
         if (enemies == null)
             return Lists.newArrayList();
         return Stream.of(enemies.toString().split(","))
-                .map(function)
-                .filter(enemy -> !enemy.isNew())
-                .collect(Collectors.toList());
+            .map(function)
+            .filter(enemy -> !enemy.isNew())
+            .collect(Collectors.toList());
     }
 
     protected EnemyInGame parseEnemy(HttpSession session, Function<Integer, EnemyInGame> function) {

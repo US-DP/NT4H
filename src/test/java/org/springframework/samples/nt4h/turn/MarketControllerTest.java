@@ -7,32 +7,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.samples.nt4h.card.ability.Ability;
 import org.springframework.samples.nt4h.card.ability.AbilityCardType;
-import org.springframework.samples.nt4h.card.ability.AbilityInGame;
-import org.springframework.samples.nt4h.card.ability.Deck;
-import org.springframework.samples.nt4h.card.enemy.Enemy;
-import org.springframework.samples.nt4h.card.enemy.EnemyInGame;
 import org.springframework.samples.nt4h.card.hero.Role;
-import org.springframework.samples.nt4h.card.product.Product;
-import org.springframework.samples.nt4h.card.product.ProductInGame;
 import org.springframework.samples.nt4h.card.product.ProductService;
 import org.springframework.samples.nt4h.card.product.StateProduct;
 import org.springframework.samples.nt4h.card.product.exceptions.NotInSaleException;
 import org.springframework.samples.nt4h.game.Accessibility;
-import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.game.GameService;
 import org.springframework.samples.nt4h.game.Mode;
 import org.springframework.samples.nt4h.message.Advise;
-import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.player.PlayerService;
 import org.springframework.samples.nt4h.player.Tier;
-import org.springframework.samples.nt4h.statistic.Statistic;
 import org.springframework.samples.nt4h.turn.exceptions.CapacitiesRequiredException;
-import org.springframework.samples.nt4h.turn.exceptions.NoCurrentPlayer;
+import org.springframework.samples.nt4h.turn.exceptions.NoCurrentPlayerException;
 import org.springframework.samples.nt4h.turn.exceptions.NoMoneyException;
 import org.springframework.samples.nt4h.turn.exceptions.WithOutProductException;
-import org.springframework.samples.nt4h.user.User;
+import org.springframework.samples.nt4h.turn.market.MarketController;
 import org.springframework.samples.nt4h.user.UserService;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -243,7 +233,7 @@ class MarketControllerTest {
     }
 
     @Test
-    void testBuyProduct() throws NotInSaleException, CapacitiesRequiredException, NoCurrentPlayer, NoMoneyException,
+    void testBuyProduct() throws NotInSaleException, CapacitiesRequiredException, NoCurrentPlayerException, NoMoneyException,
         WithOutProductException {
         when(userService.getLoggedUser()).thenReturn(user);
         when(turnService.getTurnsByPhaseAndPlayerId(any(),anyInt())).thenReturn(turn);

@@ -1,7 +1,6 @@
 package org.springframework.samples.nt4h.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.nt4h.user.User;
 import org.springframework.samples.nt4h.user.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;

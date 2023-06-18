@@ -1,21 +1,12 @@
 package org.springframework.samples.nt4h.card.ability;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.samples.nt4h.card.enemy.Enemy;
-import org.springframework.samples.nt4h.card.enemy.EnemyInGame;
 import org.springframework.samples.nt4h.card.hero.Role;
-import org.springframework.samples.nt4h.card.product.Product;
-import org.springframework.samples.nt4h.card.product.ProductInGame;
 import org.springframework.samples.nt4h.card.product.StateProduct;
 import org.springframework.samples.nt4h.game.Accessibility;
-import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.game.Mode;
-import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.player.Tier;
-import org.springframework.samples.nt4h.statistic.Statistic;
 import org.springframework.samples.nt4h.turn.Phase;
-import org.springframework.samples.nt4h.turn.Turn;
-import org.springframework.samples.nt4h.user.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

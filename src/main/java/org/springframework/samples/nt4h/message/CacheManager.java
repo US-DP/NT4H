@@ -1,9 +1,7 @@
 package org.springframework.samples.nt4h.message;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.nt4h.card.enemy.EnemyInGame;
 import org.springframework.samples.nt4h.card.enemy.EnemyService;
-import org.springframework.samples.nt4h.game.Game;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSession;
@@ -11,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+// TODO: Eliminar y convertir en tablas.
 @Component
 public class CacheManager extends BaseCacheManager {
 
@@ -317,21 +316,6 @@ public class CacheManager extends BaseCacheManager {
     public Boolean hasAddedLifeToOrcs(HttpSession session) {
         return session.getAttribute(HAS_ADDED_LIFE_TO_ORCS) != null;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
