@@ -1,14 +1,6 @@
 package org.springframework.samples.nt4h.message;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.nt4h.achievement.Achievement;
-import org.springframework.samples.nt4h.card.ability.inGame.AbilityInGame;
-import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
-import org.springframework.samples.nt4h.card.hero.Hero;
-import org.springframework.samples.nt4h.card.product.inGame.ProductInGame;
-import org.springframework.samples.nt4h.game.Game;
-import org.springframework.samples.nt4h.player.Player;
-import org.springframework.samples.nt4h.user.User;
 import org.springframework.samples.nt4h.user.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.ModelMap;
@@ -68,8 +60,8 @@ public class Advise {
         messageService.createNotification(getGame(), getUser().getUsername() + " is choosing a hero.");
     }
 
-    public void chosenHero(Hero hero) {
-        messageService.createNotification(getGame(), getLoggedPlayer().getName() + " has choosen " + hero.getName() + ".");
+    public void chosenHero(HeroInGame heroInGame) {
+        messageService.createNotification(getGame(), getLoggedPlayer().getName() + " has choosen " + heroInGame.getHero().getName() + ".");
     }
 
     public void getOutPlayer() {
@@ -108,7 +100,7 @@ public class Advise {
         messageService.createNotification(getGame(), getCurrentPlayer().getName() + " has bought " + productInGame.getProduct().getName() + ".");
     }
 
-    public void addEnemies(List<EnemyInGame> added) {
+    public void addEnemies(List<EnemyInGame> added, Game game) {
         StringBuilder enemies = new StringBuilder();
         for (EnemyInGame enemy : added) {
             enemies.append(enemy.getEnemy().getName()).append(", ");
@@ -116,7 +108,7 @@ public class Advise {
         messageService.createNotification(getGame(), getCurrentPlayer().getName() + " has added " + enemies + "to the game.");
     }
 
-    public void discardAbilityInHand(AbilityInGame ability) {
+    public void discardAbilityInHand(AbilityInGame ability, Game game) {
         messageService.createNotification(getGame(), getCurrentPlayer().getName() + " has discarded " + ability.getAbility().getName() + " from hand.");
     }
 
@@ -130,7 +122,7 @@ public class Advise {
         messageService.createNotification(getGame(), getCurrentPlayer().getName() + " is choosing between two options, evade or attack.");
     }
 
-    public void addAbilityInHand(List<AbilityInGame> takeNewCard) {
+    public void addAbilityInHand(List<AbilityInGame> takeNewCard, Game game) {
         StringBuilder abilities = new StringBuilder();
         for(AbilityInGame ability : takeNewCard) {
             System.out.println("Ability: " + ability.getAbility().getName());

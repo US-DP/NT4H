@@ -3,7 +3,6 @@ package org.springframework.samples.nt4h.statistic;
 
 import org.javatuples.Quartet;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.nt4h.user.User;
 import org.springframework.samples.nt4h.user.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

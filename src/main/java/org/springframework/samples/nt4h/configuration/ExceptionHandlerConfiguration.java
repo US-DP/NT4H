@@ -6,24 +6,15 @@ import org.springframework.samples.nt4h.card.ability.exceptions.LessThan4Abiliti
 import org.springframework.samples.nt4h.card.hero.exceptions.MaxUsesExcededException;
 import org.springframework.samples.nt4h.card.product.exceptions.NotInSaleException;
 import org.springframework.samples.nt4h.exceptions.NotFoundException;
-import org.springframework.samples.nt4h.game.Game;
-import org.springframework.samples.nt4h.game.GameService;
 import org.springframework.samples.nt4h.game.exceptions.*;
-import org.springframework.samples.nt4h.phase.Phase;
-import org.springframework.samples.nt4h.player.Player;
-import org.springframework.samples.nt4h.player.exceptions.AllDeadException;
-import org.springframework.samples.nt4h.player.exceptions.PlayerIsDeadException;
 import org.springframework.samples.nt4h.player.exceptions.RoleAlreadyChosenException;
-import org.springframework.samples.nt4h.phase.exceptions.*;
-import org.springframework.samples.nt4h.turn.TurnService;
-import org.springframework.samples.nt4h.user.User;
+import org.springframework.samples.nt4h.turn.exceptions.*;
 import org.springframework.samples.nt4h.user.UserService;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 /**
  * This advice is necessary because MockMvc is not a real servlet environment, therefore it does not redirect error
@@ -33,12 +24,10 @@ import java.util.Optional;
 @ControllerAdvice
 public class ExceptionHandlerConfiguration
 {
-	private BasicErrorController errorController;
+    private BasicErrorController errorController;
     // add any exceptions/validations/binding problems
 
     private final UserService userService;
-    private final GameService gameService;
-    private final TurnService turnService;
     private static final String PAGE_GAMES = "redirect:/games";
     private static final String PAGE_GAME_LOBBY = "redirect:/games/current";
     private static final String PAGE_GAME_HERO_SELECT = "redirect:/games/heroSelect";
@@ -46,16 +35,20 @@ public class ExceptionHandlerConfiguration
     private static final String PAGE_MARKET = "redirect:/market";
     private static final String PAGE_REESTABLISHMENT = "redirect:/reestablishment";
     private final static String PAGE_HERO_ATTACK = "redirect:/heroAttack";
-    private final static String PAGE_END = "redirect:/end";
 
     private final static String PAGE_START = "redirect:/start";
 
+    public ExceptionHandlerConfiguration(UserService userService) {
+        this.userService = userService;
+    }
+
+
+
+
     @Autowired
-    public ExceptionHandlerConfiguration(BasicErrorController errorController, UserService userService, GameService gameService, TurnService turnService) {
+    public ExceptionHandlerConfiguration(BasicErrorController errorController, UserService userService) {
         this.errorController = errorController;
         this.userService = userService;
-        this.gameService = gameService;
-        this.turnService = turnService;
     }
 
     @ExceptionHandler(NotFoundException.class)
@@ -135,7 +128,7 @@ public class ExceptionHandlerConfiguration
         return PAGE_MARKET;
     }
 
-    @ExceptionHandler(NoCurrentPlayer.class)
+    @ExceptionHandler(NoCurrentPlayerException.class)
     public String handleNoCurrentPlayer(HttpSession session, HttpServletRequest request) {
         session.setAttribute("message", "It's not your turn");
         session.setAttribute("messageType", "danger");
@@ -203,32 +196,5 @@ public class ExceptionHandlerConfiguration
         session.setAttribute("message", "You must select a hero.");
         session.setAttribute("messageType", "danger");
         return PAGE_GAME_HERO_SELECT;
-    }
-
-    @ExceptionHandler(PlayerIsDeadException.class)
-    public String handlePlayerIsDeadException(HttpSession session) throws AllDeadException {
-        session.setAttribute("message", "You are dead.");
-        session.setAttribute("messageType", "danger");
-        User loggedUser = userService.getLoggedUser();
-        Game game = loggedUser.getGame();
-        Player nextPlayer = game.getNextPlayer();
-        game.setCurrentPlayer(nextPlayer);
-        game.setCurrentTurn(turnService.getTurnsByPhaseAndPlayerId(Phase.START, nextPlayer.getId()));
-        gameService.saveGame(game);
-        return PAGE_START;
-    }
-
-    @ExceptionHandler(AllDeadException.class)
-    public String handleAllDeadException(HttpSession session) {
-        session.setAttribute("message", "All players are dead.");
-        session.setAttribute("messageType", "danger");
-        return PAGE_END;
-    }
-
-    @ExceptionHandler(WithOutEnemyException.class)
-    public String handleWithOutEnemyException(HttpSession session) {
-        session.setAttribute("message", "You must choose an enemy.");
-        session.setAttribute("messageType", "danger");
-        return PAGE_HERO_ATTACK;
     }
 }

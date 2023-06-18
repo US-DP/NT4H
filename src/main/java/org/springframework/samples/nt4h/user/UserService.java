@@ -22,7 +22,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.samples.nt4h.exceptions.NotFoundException;
 import org.springframework.samples.nt4h.player.Tier;
-import org.springframework.samples.nt4h.statistic.Statistic;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -49,7 +48,7 @@ public class UserService {
         if (user.getTier()== null) user.setTier(Tier.IRON);
         if (user.getAuthority()== null) user.setAuthority("USER");
         if (user.getIsConnected()== null) user.setIsConnected(true);
-        if (user.getStatistic() == null) user.setStatistic(new Statistic());
+        if (user.getStatistic() == null) user.setStatistic(Statistic.createStatistic());
         userRepository.save(user);
     }
 

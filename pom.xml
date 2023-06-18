@@ -7,6 +7,63 @@
     <artifactId>G4-05</artifactId>
     <version>2.2.0.BUILD-SNAPSHOT</version>
 
+    <developers>
+        <developer>
+            <id>alesanfe</id>
+            <name>Alejandro</name>
+            <email>alex.0002002@gmail.com</email>
+            <roles>
+                <role>patata</role>
+            </roles>
+        </developer>
+
+        <developer>
+            <id>Yuuta094</id>
+            <name>Iván</name>
+            <email>YvanSan094@gmail.com</email>
+            <roles>
+                <role>Youtuber</role>
+            </roles>
+            <properties>
+                <picUrl>
+                    https://www.idlewp.com/wp-content/uploads/2022/04/zenitsu-wallpaper-idlewp.jpg
+                </picUrl>
+            </properties>
+        </developer>
+
+        <developer>
+            <id>laurolmer</id>
+            <name>Laura</name>
+            <email>laurolmer@alum.us.es</email>
+            <roles>
+                <role>Ingenieran't</role>
+            </roles>
+            <properties>
+                <picUrl>
+                    https://i.pinimg.com/236x/64/6d/8b/646d8bf5a4b2dc031d9e7d04124aafdd.jpg
+                </picUrl>
+            </properties>
+        </developer>
+
+        <developer>
+            <id>alvhidrod</id>
+            <name>Alvaro</name>
+            <email>alvhidrod@alum.us.es</email>
+            <roles>
+                <role>KikoRiveraEnjoyer</role>
+            </roles>
+            <properties>
+                <picUrl>
+                    https://www.lecturas.com/medio/2021/10/12/kiko-rivera_e5975b09_1280x720.jpg
+                </picUrl>
+            </properties>
+        </developer>
+
+
+    </developers>
+
+
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -30,6 +87,7 @@
         <jacoco.version>0.8.5</jacoco.version>
         <spring-format.version>0.0.19</spring-format.version>
 
+        <kotlin.version>1.9.0-Beta</kotlin.version>
     </properties>
 
     <dependencies>
@@ -168,7 +226,29 @@
             <artifactId>guava</artifactId>
             <version>31.1-jre</version>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -211,6 +291,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <!-- Spring Boot Actuator displays build-related information if a git.properties
             file is present at the classpath -->
             <plugin>
@@ -264,6 +345,62 @@
                         <version>${mockito.version}</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <source>src/main/java</source>
+                                <source>src/main/kotlin</source>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sourceDirs>
+                        <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                    </sourceDirs>
+                    <testSourceDirs>
+                        <testSourceDir>${project.basedir}/src/test/kotlin</testSourceDir>
+                    </testSourceDirs>
+                    <jvmTarget>1.8</jvmTarget>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>testCompile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

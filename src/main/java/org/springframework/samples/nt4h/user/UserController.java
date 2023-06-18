@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.samples.nt4h.statistic.Statistic;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -117,11 +116,9 @@ public class UserController {
         User oldUser = this.userService.getLoggedUser();
         if (result.hasErrors()) return VIEW_USER_CREATE_OR_UPDATE_FORM;
         else {
-            user.setEnable(oldUser.getEnable());
-            user.setTier(oldUser.getTier());
-            user.setAuthority(oldUser.getAuthority());
-            user.setId(oldUser.getId());
-            userService.saveUser(user);
+            User newUser = user.toBuilder().enable(oldUser.getEnable()).tier(oldUser.getTier()).authority(oldUser.getAuthority()).build();
+            newUser.setId(oldUser.getId());
+            userService.saveUser(newUser);
             return PAGE_USER_DETAILS;
         }
     }

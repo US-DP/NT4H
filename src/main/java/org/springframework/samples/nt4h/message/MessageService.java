@@ -1,7 +1,6 @@
 package org.springframework.samples.nt4h.message;
 
 import lombok.AllArgsConstructor;
-import org.springframework.samples.nt4h.game.Game;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

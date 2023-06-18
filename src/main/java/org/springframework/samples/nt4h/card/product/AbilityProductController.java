@@ -1,17 +1,10 @@
 package org.springframework.samples.nt4h.card.product;
 
-import org.springframework.samples.nt4h.capacity.Capacity;
 import org.springframework.samples.nt4h.capacity.StateCapacity;
-import org.springframework.samples.nt4h.card.ability.deck.Deck;
-import org.springframework.samples.nt4h.card.ability.deck.DeckService;
-import org.springframework.samples.nt4h.game.Game;
+import org.springframework.samples.nt4h.card.ability.DeckService;
 import org.springframework.samples.nt4h.message.CacheManager;
 import org.springframework.samples.nt4h.message.Message;
-import org.springframework.samples.nt4h.message.exceptions.EnemyNotFoundException;
-import org.springframework.samples.nt4h.player.Player;
 import org.springframework.samples.nt4h.player.PlayerService;
-import org.springframework.samples.nt4h.turn.Turn;
-import org.springframework.samples.nt4h.user.User;
 import org.springframework.samples.nt4h.user.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -79,7 +72,7 @@ public class AbilityProductController {
     private String elfDagger(HttpSession session) {
         Player currentPlayer = getCurrentPlayer();
         // Pierde la carta si no tiene el héreo pericia.
-        List<StateCapacity > stateCapacities = currentPlayer.getHeroes().stream().flatMap(hero -> hero
+        List<StateCapacity > stateCapacities = currentPlayer.getHeroes().stream().flatMap(hero -> hero.getHero()
             .getCapacities().stream().map(Capacity::getStateCapacity)).collect(Collectors.toList());
         if (!stateCapacities.contains(StateCapacity.EXPERTISE))
             cacheManager.setHasToBeDeletedAbility(session);
@@ -135,7 +128,7 @@ public class AbilityProductController {
 
     // Capa élfica
     @GetMapping("/elfCloak")
-    private String elfCloak(HttpSession session) throws EnemyNotFoundException {
+    private String elfCloak(HttpSession session) {
         Player currentPlayer = getCurrentPlayer();
         Player loggedPlayer = getLoggedPlayer();
         if (currentPlayer != loggedPlayer)

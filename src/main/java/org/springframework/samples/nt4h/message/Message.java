@@ -5,9 +5,7 @@ import com.github.cliftonlabs.json_simple.Jsonable;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.samples.nt4h.game.Game;
 import org.springframework.samples.nt4h.model.BaseEntity;
-import org.springframework.samples.nt4h.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

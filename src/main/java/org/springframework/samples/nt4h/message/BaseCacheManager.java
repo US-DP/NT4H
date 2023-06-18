@@ -1,8 +1,6 @@
 package org.springframework.samples.nt4h.message;
 
 import com.google.common.collect.Lists;
-import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
-import org.springframework.samples.nt4h.message.exceptions.EnemyNotFoundException;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -12,6 +10,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+// TODO: Eliminar y convertir en tablas.
 public class BaseCacheManager {
 
     private final static String ATTACKED_ENEMY = "attackedEnemy"; // El enemigo que ha sido seleccionado.
@@ -21,25 +20,15 @@ public class BaseCacheManager {
         if (enemies == null)
             return Lists.newArrayList();
         return Stream.of(enemies.toString().split(","))
-                .map(function)
-                .filter(enemy -> !enemy.isNew())
-                .collect(Collectors.toList());
+            .map(function)
+            .filter(enemy -> !enemy.isNew())
+            .collect(Collectors.toList());
     }
 
-    protected EnemyInGame parseEnemy(HttpSession session, Function<Integer, EnemyInGame> function) throws EnemyNotFoundException {
+    protected EnemyInGame parseEnemy(HttpSession session, Function<Integer, EnemyInGame> function) {
         Object enemy = session.getAttribute(ATTACKED_ENEMY);
-        if (enemy == null)
-            throw new EnemyNotFoundException();
-        Integer idAttackedEnemy = Integer.parseInt(enemy.toString());
-        return function.apply(idAttackedEnemy);
-    }
-
-    public void addEnemies(HttpSession session, String name, EnemyInGame enemyInGame, Boolean predicate) {
-        Object enemies = session.getAttribute(name);
-        if (enemies == null)
-            session.setAttribute(name, enemyInGame.getId());
-        else if (!(predicate))
-            session.setAttribute(name, enemies + "," + enemyInGame.getId());
+        Integer idAttackedEnemy = enemy == null ? null : Integer.parseInt(enemy.toString());
+        return idAttackedEnemy == null ? new EnemyInGame() : function.apply(idAttackedEnemy);
     }
 
     public void addEnemies(HttpSession session, String name, EnemyInGame enemyInGame, Predicate<EnemyInGame> predicate) {

@@ -1,15 +1,8 @@
 package org.springframework.samples.nt4h.card.enemy;
 
-import org.springframework.samples.nt4h.card.ability.inGame.AbilityInGame;
 import org.springframework.samples.nt4h.card.ability.AbilityService;
-import org.springframework.samples.nt4h.card.ability.deck.DeckService;
-import org.springframework.samples.nt4h.card.enemy.inGame.EnemyInGame;
-import org.springframework.samples.nt4h.game.Game;
+import org.springframework.samples.nt4h.card.ability.DeckService;
 import org.springframework.samples.nt4h.message.CacheManager;
-import org.springframework.samples.nt4h.player.Player;
-import org.springframework.samples.nt4h.player.exceptions.AllDeadException;
-import org.springframework.samples.nt4h.player.exceptions.PlayerIsDeadException;
-import org.springframework.samples.nt4h.user.User;
 import org.springframework.samples.nt4h.user.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -71,7 +64,7 @@ public class AbilityNightLordController {
 
     // Fase de ataque de héroe.
     @GetMapping("/gurdrug/{cardId}")
-    public String gurdrug(@PathVariable("cardId") int cardId) throws PlayerIsDeadException, AllDeadException {
+    public String gurdrug(@PathVariable("cardId") int cardId) {
         Player currentPlayer = getCurrentPlayer();
         deckService.fromDeckToDiscard(currentPlayer, currentPlayer.getDeck());
         AbilityInGame currentAbility = abilityService.getAbilityInGameById(cardId);

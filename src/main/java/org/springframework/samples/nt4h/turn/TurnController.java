@@ -1,22 +1,12 @@
 package org.springframework.samples.nt4h.turn;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.nt4h.game.Game;
-import org.springframework.samples.nt4h.phase.Phase;
-import org.springframework.samples.nt4h.player.Player;
-import org.springframework.samples.nt4h.user.User;
 import org.springframework.samples.nt4h.user.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-/**
- * Caso inicial:
- * - El usuario debe de estar logueado,
- * - El usuario debe de haberse unido a una partida.
- * - El usuario debe de tener un jugador.
- */
 @Controller
 @RequestMapping("/turns")
 public class TurnController {
